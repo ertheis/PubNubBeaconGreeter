@@ -1,0 +1,485 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		3D7210CB1981D90700C5DE4B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D7210CA1981D90700C5DE4B /* Foundation.framework */; };
+		3D7210CD1981D90700C5DE4B /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D7210CC1981D90700C5DE4B /* CoreGraphics.framework */; };
+		3D7210CF1981D90700C5DE4B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D7210CE1981D90700C5DE4B /* UIKit.framework */; };
+		3D7210D51981D90700C5DE4B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D7210D31981D90700C5DE4B /* InfoPlist.strings */; };
+		3D7210D71981D90700C5DE4B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7210D61981D90700C5DE4B /* main.m */; };
+		3D7210DB1981D90700C5DE4B /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7210DA1981D90700C5DE4B /* AppDelegate.m */; };
+		3D7210DE1981D90700C5DE4B /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D7210DC1981D90700C5DE4B /* Main_iPhone.storyboard */; };
+		3D7210E11981D90700C5DE4B /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D7210DF1981D90700C5DE4B /* Main_iPad.storyboard */; };
+		3D7210E41981D90700C5DE4B /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7210E31981D90700C5DE4B /* ViewController.m */; };
+		3D7210E61981D90700C5DE4B /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D7210E51981D90700C5DE4B /* Images.xcassets */; };
+		3D7210ED1981D90700C5DE4B /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D7210EC1981D90700C5DE4B /* XCTest.framework */; };
+		3D7210EE1981D90700C5DE4B /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D7210CA1981D90700C5DE4B /* Foundation.framework */; };
+		3D7210EF1981D90700C5DE4B /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D7210CE1981D90700C5DE4B /* UIKit.framework */; };
+		3D7210F71981D90700C5DE4B /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3D7210F51981D90700C5DE4B /* InfoPlist.strings */; };
+		3D7210F91981D90700C5DE4B /* PubNubBeaconGreeterTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D7210F81981D90700C5DE4B /* PubNubBeaconGreeterTests.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		3D7210F01981D90700C5DE4B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3D7210BF1981D90700C5DE4B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 3D7210C61981D90700C5DE4B;
+			remoteInfo = PubNubBeaconGreeter;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		3D7210C71981D90700C5DE4B /* PubNubBeaconGreeter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PubNubBeaconGreeter.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D7210CA1981D90700C5DE4B /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		3D7210CC1981D90700C5DE4B /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		3D7210CE1981D90700C5DE4B /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		3D7210D21981D90700C5DE4B /* PubNubBeaconGreeter-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PubNubBeaconGreeter-Info.plist"; sourceTree = "<group>"; };
+		3D7210D41981D90700C5DE4B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3D7210D61981D90700C5DE4B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		3D7210D81981D90700C5DE4B /* PubNubBeaconGreeter-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PubNubBeaconGreeter-Prefix.pch"; sourceTree = "<group>"; };
+		3D7210D91981D90700C5DE4B /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		3D7210DA1981D90700C5DE4B /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		3D7210DD1981D90700C5DE4B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPhone.storyboard; sourceTree = "<group>"; };
+		3D7210E01981D90700C5DE4B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
+		3D7210E21981D90700C5DE4B /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		3D7210E31981D90700C5DE4B /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		3D7210E51981D90700C5DE4B /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		3D7210EB1981D90700C5DE4B /* PubNubBeaconGreeterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PubNubBeaconGreeterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3D7210EC1981D90700C5DE4B /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		3D7210F41981D90700C5DE4B /* PubNubBeaconGreeterTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "PubNubBeaconGreeterTests-Info.plist"; sourceTree = "<group>"; };
+		3D7210F61981D90700C5DE4B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		3D7210F81981D90700C5DE4B /* PubNubBeaconGreeterTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PubNubBeaconGreeterTests.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		3D7210C41981D90700C5DE4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D7210CD1981D90700C5DE4B /* CoreGraphics.framework in Frameworks */,
+				3D7210CF1981D90700C5DE4B /* UIKit.framework in Frameworks */,
+				3D7210CB1981D90700C5DE4B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D7210E81981D90700C5DE4B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D7210ED1981D90700C5DE4B /* XCTest.framework in Frameworks */,
+				3D7210EF1981D90700C5DE4B /* UIKit.framework in Frameworks */,
+				3D7210EE1981D90700C5DE4B /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		3D7210BE1981D90700C5DE4B = {
+			isa = PBXGroup;
+			children = (
+				3D7210D01981D90700C5DE4B /* PubNubBeaconGreeter */,
+				3D7210F21981D90700C5DE4B /* PubNubBeaconGreeterTests */,
+				3D7210C91981D90700C5DE4B /* Frameworks */,
+				3D7210C81981D90700C5DE4B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		3D7210C81981D90700C5DE4B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				3D7210C71981D90700C5DE4B /* PubNubBeaconGreeter.app */,
+				3D7210EB1981D90700C5DE4B /* PubNubBeaconGreeterTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3D7210C91981D90700C5DE4B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3D7210CA1981D90700C5DE4B /* Foundation.framework */,
+				3D7210CC1981D90700C5DE4B /* CoreGraphics.framework */,
+				3D7210CE1981D90700C5DE4B /* UIKit.framework */,
+				3D7210EC1981D90700C5DE4B /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		3D7210D01981D90700C5DE4B /* PubNubBeaconGreeter */ = {
+			isa = PBXGroup;
+			children = (
+				3D7210D91981D90700C5DE4B /* AppDelegate.h */,
+				3D7210DA1981D90700C5DE4B /* AppDelegate.m */,
+				3D7210DC1981D90700C5DE4B /* Main_iPhone.storyboard */,
+				3D7210DF1981D90700C5DE4B /* Main_iPad.storyboard */,
+				3D7210E21981D90700C5DE4B /* ViewController.h */,
+				3D7210E31981D90700C5DE4B /* ViewController.m */,
+				3D7210E51981D90700C5DE4B /* Images.xcassets */,
+				3D7210D11981D90700C5DE4B /* Supporting Files */,
+			);
+			path = PubNubBeaconGreeter;
+			sourceTree = "<group>";
+		};
+		3D7210D11981D90700C5DE4B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3D7210D21981D90700C5DE4B /* PubNubBeaconGreeter-Info.plist */,
+				3D7210D31981D90700C5DE4B /* InfoPlist.strings */,
+				3D7210D61981D90700C5DE4B /* main.m */,
+				3D7210D81981D90700C5DE4B /* PubNubBeaconGreeter-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3D7210F21981D90700C5DE4B /* PubNubBeaconGreeterTests */ = {
+			isa = PBXGroup;
+			children = (
+				3D7210F81981D90700C5DE4B /* PubNubBeaconGreeterTests.m */,
+				3D7210F31981D90700C5DE4B /* Supporting Files */,
+			);
+			path = PubNubBeaconGreeterTests;
+			sourceTree = "<group>";
+		};
+		3D7210F31981D90700C5DE4B /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				3D7210F41981D90700C5DE4B /* PubNubBeaconGreeterTests-Info.plist */,
+				3D7210F51981D90700C5DE4B /* InfoPlist.strings */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		3D7210C61981D90700C5DE4B /* PubNubBeaconGreeter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D7210FC1981D90700C5DE4B /* Build configuration list for PBXNativeTarget "PubNubBeaconGreeter" */;
+			buildPhases = (
+				3D7210C31981D90700C5DE4B /* Sources */,
+				3D7210C41981D90700C5DE4B /* Frameworks */,
+				3D7210C51981D90700C5DE4B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PubNubBeaconGreeter;
+			productName = PubNubBeaconGreeter;
+			productReference = 3D7210C71981D90700C5DE4B /* PubNubBeaconGreeter.app */;
+			productType = "com.apple.product-type.application";
+		};
+		3D7210EA1981D90700C5DE4B /* PubNubBeaconGreeterTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3D7210FF1981D90700C5DE4B /* Build configuration list for PBXNativeTarget "PubNubBeaconGreeterTests" */;
+			buildPhases = (
+				3D7210E71981D90700C5DE4B /* Sources */,
+				3D7210E81981D90700C5DE4B /* Frameworks */,
+				3D7210E91981D90700C5DE4B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3D7210F11981D90700C5DE4B /* PBXTargetDependency */,
+			);
+			name = PubNubBeaconGreeterTests;
+			productName = PubNubBeaconGreeterTests;
+			productReference = 3D7210EB1981D90700C5DE4B /* PubNubBeaconGreeterTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		3D7210BF1981D90700C5DE4B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0510;
+				ORGANIZATIONNAME = PubNub;
+				TargetAttributes = {
+					3D7210EA1981D90700C5DE4B = {
+						TestTargetID = 3D7210C61981D90700C5DE4B;
+					};
+				};
+			};
+			buildConfigurationList = 3D7210C21981D90700C5DE4B /* Build configuration list for PBXProject "PubNubBeaconGreeter" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3D7210BE1981D90700C5DE4B;
+			productRefGroup = 3D7210C81981D90700C5DE4B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				3D7210C61981D90700C5DE4B /* PubNubBeaconGreeter */,
+				3D7210EA1981D90700C5DE4B /* PubNubBeaconGreeterTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		3D7210C51981D90700C5DE4B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D7210E11981D90700C5DE4B /* Main_iPad.storyboard in Resources */,
+				3D7210E61981D90700C5DE4B /* Images.xcassets in Resources */,
+				3D7210DE1981D90700C5DE4B /* Main_iPhone.storyboard in Resources */,
+				3D7210D51981D90700C5DE4B /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D7210E91981D90700C5DE4B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D7210F71981D90700C5DE4B /* InfoPlist.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		3D7210C31981D90700C5DE4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D7210E41981D90700C5DE4B /* ViewController.m in Sources */,
+				3D7210DB1981D90700C5DE4B /* AppDelegate.m in Sources */,
+				3D7210D71981D90700C5DE4B /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		3D7210E71981D90700C5DE4B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3D7210F91981D90700C5DE4B /* PubNubBeaconGreeterTests.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		3D7210F11981D90700C5DE4B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 3D7210C61981D90700C5DE4B /* PubNubBeaconGreeter */;
+			targetProxy = 3D7210F01981D90700C5DE4B /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3D7210D31981D90700C5DE4B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3D7210D41981D90700C5DE4B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		3D7210DC1981D90700C5DE4B /* Main_iPhone.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3D7210DD1981D90700C5DE4B /* Base */,
+			);
+			name = Main_iPhone.storyboard;
+			sourceTree = "<group>";
+		};
+		3D7210DF1981D90700C5DE4B /* Main_iPad.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3D7210E01981D90700C5DE4B /* Base */,
+			);
+			name = Main_iPad.storyboard;
+			sourceTree = "<group>";
+		};
+		3D7210F51981D90700C5DE4B /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3D7210F61981D90700C5DE4B /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		3D7210FA1981D90700C5DE4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3D7210FB1981D90700C5DE4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 7.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		3D7210FD1981D90700C5DE4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PubNubBeaconGreeter/PubNubBeaconGreeter-Prefix.pch";
+				INFOPLIST_FILE = "PubNubBeaconGreeter/PubNubBeaconGreeter-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		3D7210FE1981D90700C5DE4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PubNubBeaconGreeter/PubNubBeaconGreeter-Prefix.pch";
+				INFOPLIST_FILE = "PubNubBeaconGreeter/PubNubBeaconGreeter-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+		3D7211001981D90700C5DE4B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PubNubBeaconGreeter.app/PubNubBeaconGreeter";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PubNubBeaconGreeter/PubNubBeaconGreeter-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = "PubNubBeaconGreeterTests/PubNubBeaconGreeterTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Debug;
+		};
+		3D7211011981D90700C5DE4B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/PubNubBeaconGreeter.app/PubNubBeaconGreeter";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "PubNubBeaconGreeter/PubNubBeaconGreeter-Prefix.pch";
+				INFOPLIST_FILE = "PubNubBeaconGreeterTests/PubNubBeaconGreeterTests-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUNDLE_LOADER)";
+				WRAPPER_EXTENSION = xctest;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		3D7210C21981D90700C5DE4B /* Build configuration list for PBXProject "PubNubBeaconGreeter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D7210FA1981D90700C5DE4B /* Debug */,
+				3D7210FB1981D90700C5DE4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3D7210FC1981D90700C5DE4B /* Build configuration list for PBXNativeTarget "PubNubBeaconGreeter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D7210FD1981D90700C5DE4B /* Debug */,
+				3D7210FE1981D90700C5DE4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		3D7210FF1981D90700C5DE4B /* Build configuration list for PBXNativeTarget "PubNubBeaconGreeterTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3D7211001981D90700C5DE4B /* Debug */,
+				3D7211011981D90700C5DE4B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 3D7210BF1981D90700C5DE4B /* Project object */;
+}
