@@ -14,6 +14,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var favoriteLabel: UILabel!
     @IBOutlet var profPic: UIImageView!
+    @IBOutlet var status: UILabel!
     
     let uuidObj = NSUUID(UUIDString: "0CF052C2-97CA-407C-84F8-B62AAC4E9020")
     
@@ -63,15 +64,19 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             
             if (beacon.proximity == CLProximity.Unknown) {
                 println("Unknown Proximity")
+                status.text = "Unknown Proximity"
                 appDelegate.comm.leaveShop(beacon.major, minor: beacon.minor)
-                return
             } else if (beacon.proximity == CLProximity.Immediate) {
                 println("Immediate")
+                status.text = "Immediate"
                 appDelegate.comm.enterShop(beacon.major, minor: beacon.minor)
             } else if (beacon.proximity == CLProximity.Near) {
                 println("Near")
+                status.text = "Near"
+                appDelegate.comm.leaveShop(beacon.major, minor: beacon.minor)
             } else if (beacon.proximity == CLProximity.Far) {
                 println("Far")
+                status.text = "Far"
                 appDelegate.comm.leaveShop(beacon.major, minor: beacon.minor)
             }
         }

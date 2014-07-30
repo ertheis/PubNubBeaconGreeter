@@ -13,6 +13,9 @@ import CoreBluetooth
 class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CBPeripheralManagerDelegate {
     
     @IBOutlet var tableView: UITableView!
+    @IBOutlet var status: UILabel!
+    var beaconText = "Loading"
+    
     var defaultData: [NSDictionary] = [["textLabel":"Cutomers currently in the store will appear here.", "detailTextLabel":"iBeacon broadcast has started with Major: 9, Minor: 6.", "imgPath":"./DefaultPic"]]
     var tableData:PNObject = PNObject()
     
@@ -47,16 +50,28 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         PNObservationCenter.defaultCenter().addObjectChangeObserver(self) { (syncObject: PNObject!) in
             self.tableData = syncObject
+            self.status.text = "Presence Change"
+            let delay = 1 * Double(NSEC_PER_SEC)
+            let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+            dispatch_after(time, dispatch_get_main_queue(), self.statusSetToBeacon)
             self.tableView.reloadData()
         }
+    }
+    
+    func statusSetToBeacon() {
+        self.status.text = self.beaconText
     }
     
     func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager!) {
         if(peripheral.state == CBPeripheralManagerState.PoweredOn) {
             println("powered on")
+            self.beaconText = "Beacon Advertising"
+            statusSetToBeacon()
             self.manager.startAdvertising(beaconData)
         } else if(peripheral.state == CBPeripheralManagerState.PoweredOff) {
             println("powered off")
+            self.beaconText = "Beacon Off"
+            statusSetToBeacon()
             self.manager.stopAdvertising()
         }
     }
