@@ -100,8 +100,14 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         
         cell.textLabel.text = cellData.objectForKey("textLabel") as String
         cell.detailTextLabel.text = cellData.objectForKey("detailTextLabel") as String
-        let path = NSBundle.mainBundle().pathForResource(cellData.objectForKey("imgPath") as String, ofType: "png")
-        let theImage = UIImage(contentsOfFile: path)
+        var theImage = UIImage()
+        if cellData.objectForKey("imgPath") as String == "./DefaultPic" {
+            let path = NSBundle.mainBundle().pathForResource(cellData.objectForKey("imgPath") as String, ofType: "png")
+            theImage = UIImage(contentsOfFile: path)
+        } else {
+            var raw = cellData.objectForKey("imgPath") as String
+            theImage = UIImage(data: NSData(base64EncodedString: raw, options: NSDataBase64DecodingOptions.fromRaw(0)!))
+        }
         cell.imageView.image = theImage
         return cell
     }

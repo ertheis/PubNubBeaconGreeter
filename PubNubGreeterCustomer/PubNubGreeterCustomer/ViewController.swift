@@ -13,6 +13,7 @@ import CoreBluetooth
 class ViewController: UIViewController, CLLocationManagerDelegate {
     @IBOutlet var nameLabel: UILabel!
     @IBOutlet var favoriteLabel: UILabel!
+    @IBOutlet var profPic: UIImageView!
     
     let uuidObj = NSUUID(UUIDString: "0CF052C2-97CA-407C-84F8-B62AAC4E9020")
     
@@ -23,8 +24,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        nameLabel.text = appDelegate.comm.name
-        favoriteLabel.text = appDelegate.comm.favorite
+        nameLabel.text = "Name: \(appDelegate.comm.name)"
+        favoriteLabel.text = "Favorite Drink: \(appDelegate.comm.favorite)"
+        profPic.image = UIImage(data: appDelegate.comm.capturedPicData)
         manager.delegate = self
         region = CLBeaconRegion(proximityUUID: uuidObj, identifier: "com.pubnub.test")
         var os = UIDevice.currentDevice().systemVersion
@@ -61,7 +63,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
             
             if (beacon.proximity == CLProximity.Unknown) {
                 println("Unknown Proximity")
-                //appDelegate.comm.leaveShop(beacon.major, minor: beacon.minor)
+                appDelegate.comm.leaveShop(beacon.major, minor: beacon.minor)
                 return
             } else if (beacon.proximity == CLProximity.Immediate) {
                 println("Immediate")

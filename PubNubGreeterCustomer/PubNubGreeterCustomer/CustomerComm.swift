@@ -18,6 +18,7 @@ class CustomerComm: NSObject, PNDelegate {
     var name = "John"
     var favorite = "Club Soda"
     var pic = "./DefaultPic"
+    var capturedPicData = NSData()
     
     var inShop = false
     var syncing = false
@@ -37,6 +38,7 @@ class CustomerComm: NSObject, PNDelegate {
     
     func enterShop(major: Int, minor: Int) {
         if !inShop {
+            self.pic = self.capturedPicData.base64EncodedStringWithOptions(nil)
             if !syncing {
                 PubNub.startObjectSynchronization("\(self.sync_db)\(major)\(minor)") { (syncObject: PNObject!, error: PNError!) in
                     if !error {
