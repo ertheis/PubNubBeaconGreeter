@@ -18,6 +18,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var defaultData: [NSDictionary] = [["textLabel":"Cutomers currently in the store will appear here.", "detailTextLabel":"iBeacon broadcast has started with Major: 9, Minor: 6.", "imgPath":"./DefaultPic"]]
     var tableData:PNObject = PNObject()
+    var changeData = [String]()
     
     let uuidObj = NSUUID(UUIDString: "0CF052C2-97CA-407C-84F8-B62AAC4E9020")
     
@@ -37,6 +38,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         PubNub.setConfiguration(myConfig)
         PubNub.connect()
         PubNub.startObjectSynchronization(appDelegate.sync_db)
+        PubNub.subscribeOnChannel(PNChannel.channelWithName("GreeterChannel96") as PNChannel)
         
         PNObservationCenter.defaultCenter().addObjectSynchronizationStartObserver(self) { (syncObject: PNObject!, error: PNError!) in
             if !error {
@@ -53,25 +55,25 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.status.text = "Presence Change"
             let delay = 1 * Double(NSEC_PER_SEC)
             let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-            dispatch_after(time, dispatch_get_main_queue(), self.statusSetToBeacon)
+            dispatch_after(time, dispatch_get_main_queue(), {self.status.text = self.beaconText})
             self.tableView.reloadData()
         }
-    }
-    
-    func statusSetToBeacon() {
-        self.status.text = self.beaconText
+        
+        PNObservationCenter.defaultCenter().addMessageReceiveObserver(self) { (message: PNMessage!) in
+            self.changeData.append(message.message as String)
+        }
     }
     
     func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager!) {
         if(peripheral.state == CBPeripheralManagerState.PoweredOn) {
             println("powered on")
             self.beaconText = "Beacon Advertising"
-            statusSetToBeacon()
+            self.status.text = self.beaconText
             self.manager.startAdvertising(beaconData)
         } else if(peripheral.state == CBPeripheralManagerState.PoweredOff) {
             println("powered off")
             self.beaconText = "Beacon Off"
-            statusSetToBeacon()
+            self.status.text = self.beaconText
             self.manager.stopAdvertising()
         }
     }
@@ -104,13 +106,31 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         cell.selectionStyle = UITableViewCellSelectionStyle.None
         cell.textLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
         cell.textLabel.numberOfLines = 0
+        cell.imageView.layer.borderColor = UIColor.whiteColor().CGColor
         
         var cellData: NSDictionary
-        
         if tableData.count < 1 {
             cellData = defaultData[indexPath.row]
         } else {
             cellData = tableData.allValues[indexPath.row] as NSDictionary
+            for index in 0...changeData.count-1 {
+                if tableData.allKeys[indexPath.row] as String == changeData[index] {
+                    cell.backgroundColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1)
+                    cell.textLabel.textColor = UIColor.whiteColor()
+                    cell.detailTextLabel.textColor = UIColor.whiteColor()
+                    cell.imageView.layer.borderColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1).CGColor
+                    let delay = 1.5 * Double(NSEC_PER_SEC)
+                    let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                    dispatch_after(time, dispatch_get_main_queue()) {
+                        cell.backgroundColor = UIColor.whiteColor()
+                        cell.textLabel.textColor = UIColor.blackColor()
+                        cell.detailTextLabel.textColor = UIColor.blackColor()
+                        cell.imageView.layer.borderColor = UIColor.whiteColor().CGColor
+                    }
+                    changeData.removeAtIndex(index)
+                    break
+                }
+            }
         }
         
         cell.textLabel.text = cellData.objectForKey("textLabel") as String
@@ -124,6 +144,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             theImage = UIImage(data: NSData(base64EncodedString: raw, options: NSDataBase64DecodingOptions.fromRaw(0)!))
         }
         cell.imageView.image = theImage
+        cell.imageView.layer.cornerRadius = 40
+        cell.imageView.layer.borderWidth = 2
+        cell.imageView.layer.masksToBounds = true
         return cell
     }
     

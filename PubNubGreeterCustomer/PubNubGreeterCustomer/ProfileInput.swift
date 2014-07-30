@@ -38,6 +38,9 @@ class ProfileInput: UIViewController, UIImagePickerControllerDelegate, UINavigat
     func imagePickerController(picker: UIImagePickerController!, didFinishPickingImage image: UIImage!, editingInfo: NSDictionary!){
         appDelegate.comm.capturedPicData = compressImage(image)
         profPic.image = UIImage(data: appDelegate.comm.capturedPicData)
+        profPic.layer.cornerRadius = 100
+        profPic.layer.borderWidth = 1
+        profPic.layer.masksToBounds = true
         picker.dismissViewControllerAnimated(true, completion: nil)
     }
     

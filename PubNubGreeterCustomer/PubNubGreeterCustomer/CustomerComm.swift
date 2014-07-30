@@ -38,6 +38,17 @@ class CustomerComm: NSObject, PNDelegate {
     
     func enterShop(major: Int, minor: Int) {
         if !inShop {
+            PubNub.subscribeOnChannel(PNChannel.channelWithName("GreeterChannel96") as PNChannel) { (state: PNSubscriptionProcessState!, channels: [AnyObject]!, error: PNError!) in
+                if !error {
+                    PubNub.sendMessage(PubNub.clientIdentifier(), toChannel: PNChannel.channelWithName("GreeterChannel96") as PNChannel) { (state: PNMessageState!, data: AnyObject!) in
+                        PubNub.unsubscribeFromChannel(PNChannel.channelWithName("GreeterChannel96") as PNChannel)
+                    }
+                } else {
+                    println("BLOCK: \(error.code)")
+                    println("BLOCK: \(error.description)")
+                }
+            }
+            
             self.pic = self.capturedPicData.base64EncodedStringWithOptions(nil)
             if !syncing {
                 PubNub.startObjectSynchronization("\(self.sync_db)\(major)\(minor)") { (syncObject: PNObject!, error: PNError!) in

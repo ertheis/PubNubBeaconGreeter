@@ -2252,7 +2252,6 @@ withCompletionHandlingBlock:(PNClientObjectModificationHandlerBlock)handlerBlock
 
 
             PNError *requestError = [PNError errorWithCode:statusCode];
-            NSLog([requestError description]);
             requestError.associatedObject = objectInformation;
             errorHandlingBlock(requestError);
         }

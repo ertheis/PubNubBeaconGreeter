@@ -13,7 +13,6 @@
 		3D54781C1982E34F009758CD /* PubNubGreeterStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D54781B1982E34F009758CD /* PubNubGreeterStoreTests.swift */; };
 		3D5479221982E3EE009758CD /* Main_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D5478251982E3ED009758CD /* Main_iPhone.storyboard */; };
 		3D5479231982E3EE009758CD /* Main_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3D5478271982E3ED009758CD /* Main_iPad.storyboard */; };
-		3D5479241982E3EE009758CD /* DefaultPic.png in Resources */ = {isa = PBXBuildFile; fileRef = 3D54782B1982E3ED009758CD /* DefaultPic.png */; };
 		3D5479251982E3EE009758CD /* NavController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D54782C1982E3ED009758CD /* NavController.swift */; };
 		3D5479261982E3EE009758CD /* PNObservationCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D5478321982E3ED009758CD /* PNObservationCenter.m */; };
 		3D5479271982E3EE009758CD /* PubNub.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D5478351982E3ED009758CD /* PubNub.m */; };
@@ -102,6 +101,7 @@
 		3D54797B1982E41A009758CD /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D54797A1982E41A009758CD /* CFNetwork.framework */; };
 		3D54797D1982E426009758CD /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D54797C1982E426009758CD /* SystemConfiguration.framework */; };
 		3D54797F1982E42B009758CD /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D54797E1982E42B009758CD /* libz.dylib */; };
+		3DE766FE1988B06C00B03A80 /* DefaultPic.png in Resources */ = {isa = PBXBuildFile; fileRef = 3DE766FD1988B06C00B03A80 /* DefaultPic.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -127,7 +127,6 @@
 		3D5478281982E3ED009758CD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main_iPad.storyboard; sourceTree = "<group>"; };
 		3D5478291982E3ED009758CD /* PubNubGreeterStore-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PubNubGreeterStore-Bridging-Header.h"; sourceTree = "<group>"; };
 		3D54782A1982E3ED009758CD /* PubNubGreeterStore-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PubNubGreeterStore-Prefix.pch"; sourceTree = "<group>"; };
-		3D54782B1982E3ED009758CD /* DefaultPic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultPic.png; sourceTree = "<group>"; };
 		3D54782C1982E3ED009758CD /* NavController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavController.swift; sourceTree = "<group>"; };
 		3D5478301982E3ED009758CD /* PNObservationCenter+Protected.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PNObservationCenter+Protected.h"; sourceTree = "<group>"; };
 		3D5478311982E3ED009758CD /* PNObservationCenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PNObservationCenter.h; sourceTree = "<group>"; };
@@ -361,6 +360,7 @@
 		3D54797A1982E41A009758CD /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		3D54797C1982E426009758CD /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		3D54797E1982E42B009758CD /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
+		3DE766FD1988B06C00B03A80 /* DefaultPic.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DefaultPic.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -422,7 +422,7 @@
 			isa = PBXGroup;
 			children = (
 				3D54782A1982E3ED009758CD /* PubNubGreeterStore-Prefix.pch */,
-				3D54782B1982E3ED009758CD /* DefaultPic.png */,
+				3DE766FD1988B06C00B03A80 /* DefaultPic.png */,
 				3D5478291982E3ED009758CD /* PubNubGreeterStore-Bridging-Header.h */,
 				3D5478071982E34F009758CD /* Info.plist */,
 			);
@@ -894,7 +894,7 @@
 			files = (
 				3D5479231982E3EE009758CD /* Main_iPad.storyboard in Resources */,
 				3D5479221982E3EE009758CD /* Main_iPhone.storyboard in Resources */,
-				3D5479241982E3EE009758CD /* DefaultPic.png in Resources */,
+				3DE766FE1988B06C00B03A80 /* DefaultPic.png in Resources */,
 				3D5478101982E34F009758CD /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

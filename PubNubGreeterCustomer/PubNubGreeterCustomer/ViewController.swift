@@ -28,6 +28,9 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
         nameLabel.text = "Name: \(appDelegate.comm.name)"
         favoriteLabel.text = "Favorite Drink: \(appDelegate.comm.favorite)"
         profPic.image = UIImage(data: appDelegate.comm.capturedPicData)
+        profPic.layer.cornerRadius = 100
+        profPic.layer.borderWidth = 1
+        profPic.layer.masksToBounds = true
         manager.delegate = self
         region = CLBeaconRegion(proximityUUID: uuidObj, identifier: "com.pubnub.test")
         var os = UIDevice.currentDevice().systemVersion
