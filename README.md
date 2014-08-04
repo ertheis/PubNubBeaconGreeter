@@ -10,7 +10,7 @@ Thus, we came up with a solution using Apple's iBeacon protocol and PubNub's dat
 
 ##The Storefront Application
 
-![alt-text](/ertheis/PubNubBeaconGreeter/blob/master/TutorialPics/StorefrontUI.png "basic storefront UI")
+![alt-text](https://github.com/ertheis/PubNubBeaconGreeter/blob/master/TutorialPics/StorefrontUI.png "basic storefront UI")
 
 [1]: http://www.github.com/ertheis/PubNubBeaconGreeter
 [2]: https://github.com/ertheis/Smart-iBeacon/blob/master/README.md
