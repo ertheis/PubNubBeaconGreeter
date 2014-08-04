@@ -97,7 +97,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         var potentialCell = tableView.dequeueReusableCellWithIdentifier("cell") as? UITableViewCell
         var cell: UITableViewCell
-        if potentialCell? {
+        if potentialCell != nil {
             cell = potentialCell!
         } else {
             cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "cell")
