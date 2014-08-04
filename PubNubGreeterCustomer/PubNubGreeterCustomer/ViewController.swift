@@ -52,10 +52,12 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     func locationManager(manager: CLLocationManager!, didEnterRegion region: CLRegion!) {
         manager.startRangingBeaconsInRegion(region as CLBeaconRegion)
         println("Possible Match")
+        status.text = "Possible Match"
     }
     
     func locationManager(manager: CLLocationManager!, didExitRegion region: CLRegion!) {
         self.appDelegate.comm.leaveShop(self.appDelegate.comm.inside.major, minor: self.appDelegate.comm.inside.minor)
+        status.text = "Left the Shop"
         manager.stopRangingBeaconsInRegion(region as CLBeaconRegion)
     }
     

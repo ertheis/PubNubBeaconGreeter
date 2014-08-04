@@ -26,7 +26,7 @@ class CustomerComm: NSObject, PNDelegate {
     var inside: Point
     var uuid: String = ""
     
-    init() {
+    override init() {
         inside = Point(major: -1, minor: -1)
         super.init()
         PubNub.setDelegate(self)

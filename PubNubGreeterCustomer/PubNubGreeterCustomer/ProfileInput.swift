@@ -9,13 +9,17 @@
 import UIKit
 import MobileCoreServices
 
-class ProfileInput: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class ProfileInput: UIViewController, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as AppDelegate
     
+    @IBOutlet var favoriteField: UITextField!
+    @IBOutlet var nameField: UITextField!
     @IBOutlet var profPic: UIImageView!
     
     override func viewDidLoad() {
+        favoriteField.delegate = self
+        nameField.delegate = self
         super.viewDidLoad()
     }
     
@@ -69,6 +73,11 @@ class ProfileInput: UIViewController, UIImagePickerControllerDelegate, UINavigat
         cameraUI.allowsEditing = true
         cameraUI.delegate = self
         self.presentViewController(cameraUI, animated: true, completion: nil)
+        return true
+    }
+    
+    func textFieldShouldReturn(textField: UITextField!) -> Bool {
+        textField.resignFirstResponder()
         return true
     }
     
