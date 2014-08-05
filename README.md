@@ -10,7 +10,18 @@ Thus, we came up with a solution using Apple's iBeacon protocol and PubNub's dat
 
 ##The Storefront Application
 
-![alt-text](https://github.com/ertheis/PubNubBeaconGreeter/blob/master/TutorialPics/StorefrontUI.png =1136x640 "basic storefront UI")
+The intent of the storefront application is almost exclusively to display information. There isn't any required interaction between it and the shopkeeper. It merely assists the user with remembering the people they are intereacting with. The view consists of a table view and a status label at the bottom. The table view contains a list of customers currently in the store and a bit of information about them (in our case, their name, favorite drink, and a photo). 
+
+<p align="center">
+  <img src="https://github.com/ertheis/PubNubBeaconGreeter/blob/master/TutorialPics/StorefrontUI.png" alt="basic storefront UI" width="300">
+</p>
+
+Behind the scenes, the iDevice broadcasts an iBeacon unique to the shop (this could be done by independent beacon hardware). Meanwhile, the storefont app listens to a [PubNub DataSync Object][3] and a [PubNub Channel][4]. For now, we'll only worry about how communication looks from the storefront side. When a customer enters the shop, the DataSync object notifies us that something has changed and a message on the PubNub channel tells us what part of the object changed. We use this information to update the table and status label. We also highlight any new rows in the table for just over a second.
+<p align="center">
+  <img src="https://github.com/ertheis/PubNubBeaconGreeter/blob/master/TutorialPics/StorefrontNewCustomer.png" alt="basic storefront UI" width="300"> -> <img src="https://github.com/ertheis/PubNubBeaconGreeter/blob/master/TutorialPics/StorefrontNormal.png" alt="basic storefront UI" width="300">
+</p>
 
 [1]: http://www.github.com/ertheis/PubNubBeaconGreeter
 [2]: https://github.com/ertheis/Smart-iBeacon/blob/master/README.md
+[3]: http://www.pubnub.com/how-it-works/data-sync/
+[4]: http://www.pubnub.com/how-it-works/data-streams/
