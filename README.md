@@ -271,7 +271,7 @@ As mentioned in the previous post, you should have already loaded the [PubNub iO
         beaconData = self.region.peripheralDataWithMeasuredPower(nil) as NSDictionary
         self.manager = CBPeripheralManager(delegate: self, queue: nil)
         
-        let myConfig = PNConfiguration(forOrigin: "pubsub-beta.pubnub.com", publishKey: "your publish key", subscribeKey: "tiyr subscribe key", secretKey: nil, authorizationKey: nil)
+        let myConfig = PNConfiguration(forOrigin: "pubsub-beta.pubnub.com", publishKey: "your publish key", subscribeKey: "your subscribe key", secretKey: nil, authorizationKey: nil)
         PubNub.setConfiguration(myConfig)
         PubNub.connect()
         PubNub.startObjectSynchronization("CoffeeShop96")
@@ -312,8 +312,69 @@ Whenever an object change occurs (and on the initial copy of the object) we inst
     }
 ```
 
-###Updating our Table and Highlighting Changes
-
+###Highlighting Changes
+Because of the way we set up our table view in the last post, it will automatically switch its data source to our DataSync object when it has at least one element in it (when there is at least one person in the store). However, we also want to temporarily highlight any new customers in the table. We do this in the cellForRowAtIndexPath function. Recall that we receive the keys of new rows over the channel we subscribed on. Thus, we can iterate through the array of keys and temporarily change them red. Once we have signaled the cell to turn red for 1.5 seconds, we remove its key from the array. Note that when we turn the row red, we also turn the boarder of the profile image red to match and the row's text white for readability. To delay the row's return to its original colors, we use the dispatch_after function.
+```Swift
+    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+        var potentialCell = tableView.dequeueReusableCellWithIdentifier("cell") as? UITableViewCell
+        var cell: UITableViewCell
+        if potentialCell != nil {
+            cell = potentialCell!
+        } else {
+            cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "cell")
+        }
+        
+        cell.selectionStyle = UITableViewCellSelectionStyle.None
+        cell.textLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        cell.textLabel.numberOfLines = 0
+        cell.imageView.layer.borderColor = UIColor.whiteColor().CGColor
+        
+        var cellData: Dictionary<String, String>
+        if tableData.count < 1 {
+            cellData = self.defaultData
+        } else {
+            cellData = tableData.allValues[indexPath.row] as Dictionary
+            //START OF NEW CODE
+            if !changeData.isEmpty {
+                for index in 0...changeData.count-1 {
+                    if tableData.allKeys[indexPath.row] as String == changeData[index] {
+                        cell.backgroundColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1)
+                        cell.textLabel.textColor = UIColor.whiteColor()
+                        cell.detailTextLabel.textColor = UIColor.whiteColor()
+                        cell.imageView.layer.borderColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1).CGColor
+                        let delay = 1.5 * Double(NSEC_PER_SEC)
+                        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                        dispatch_after(time, dispatch_get_main_queue()) {
+                            cell.backgroundColor = UIColor.whiteColor()
+                            cell.textLabel.textColor = UIColor.blackColor()
+                            cell.detailTextLabel.textColor = UIColor.blackColor()
+                            cell.imageView.layer.borderColor = UIColor.whiteColor().CGColor
+                        }
+                        changeData.removeAtIndex(index)
+                        break
+                    }
+                }
+            }
+            //END OF NEW CODE
+        }
+        
+        cell.textLabel.text = cellData["textLabel"]
+        cell.detailTextLabel.text = cellData["detailTextLabel"]
+        var theImage = UIImage()
+        if cellData["imgPath"] == "./DefaultPic" {
+            let path = NSBundle.mainBundle().pathForResource(cellData["imgPath"], ofType: "png")
+            theImage = UIImage(contentsOfFile: path)
+        } else {
+            var raw = cellData["imgPath"] as String?
+            theImage = UIImage(data: NSData(base64EncodedString: raw!, options: NSDataBase64DecodingOptions.fromRaw(0)!))
+        }
+        cell.imageView.image = theImage
+        cell.imageView.layer.cornerRadius = 40
+        cell.imageView.layer.borderWidth = 2
+        cell.imageView.layer.masksToBounds = true
+        return cell
+    }
+```
 
 [1]: http://www.github.com/ertheis/PubNubBeaconGreeter
 [2]: https://github.com/ertheis/Smart-iBeacon/blob/master/README.md
