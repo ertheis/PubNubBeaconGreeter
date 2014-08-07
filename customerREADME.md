@@ -16,7 +16,9 @@ Our user profile will consist of three pieces of information: name, favorite dri
 
 Start by embedding the default view in a navigation controller. Then we'll add two text fields (for the name and favorite drink) two buttons (one to initiate a camera view and the other to move to the next page), and a UIImageView (to display the captured picture). You can also add descriptive labels for each of the elements. Finally, create a new swift file (I named mine ProfileInput.swift) and set it as the controller for the view.
 
-
+<p align="center">
+  <img src="https://github.com/ertheis/PubNubBeaconGreeter/blob/master/TutorialPics/ViewSetup.png" alt="basic storefront UI" width="300">
+</p
 
 [1]: http://www.github.com/ertheis/PubNubBeaconGreeter
 [2]: https://github.com/ertheis/Smart-iBeacon/blob/master/README.md
