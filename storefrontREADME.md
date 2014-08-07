@@ -7,6 +7,8 @@ Every morning on the way to work, I grab a latte from a coffee shop near my apar
 
 We came up with a solution using Apple's iBeacon protocol and PubNub's data streaming network. In this tutorial, we will build a greeter application. Its primary functionality is to let a shopkeeper know when a customer enters the store and provide the shopkeeper with a little bit of information about the customer. It's basically [our presence feature][7] in real life. This information allows the shopkeeper to personalize and improve the customer's experience.
 
+In this blog post we'll make the storefront application. We'll create a user interface, the logic required to load a set of user profile, automatically sync our customer data with PubNub, and an iBeacon. It is the first of two tutorials covering the creation of a storefront greeter system.
+
 ##The Storefront Application: the UI and iBeacon Broadcast
 The intent of the storefront application is almost exclusively to display information. There isn't any required interaction between it and the shopkeeper. It merely assists the user with remembering the people they are intereacting with. The view consists of a table view and a status label at the bottom. The table view contains a list of customers currently in the store and a bit of information about them (in our case, their name, favorite drink, and a photo). 
 <p align="center">
@@ -18,9 +20,7 @@ Behind the scenes, the iDevice broadcasts an iBeacon unique to the shop (this co
   <img src="https://github.com/ertheis/PubNubBeaconGreeter/blob/master/TutorialPics/StorefrontNewCustomer.png" alt="basic storefront UI" width="300"> --> <img src="https://github.com/ertheis/PubNubBeaconGreeter/blob/master/TutorialPics/StorefrontNormal.png" alt="basic storefront UI" width="300">
 </p>
 
-This blog post will cover the creation of the user interface, the logic required to load a set of user profile, and the broadcast of an iBeacon. It is the first in a series of four tutorials covering the creation of a storefront greeter system.
-
-###Setup the User Interface
+###Setup the iOS Storyboard
 
 We'll start by creating the user interface and linking it to our view controller. After you create a new single view Xcode project, go to the storyboard and drag a table view onto the default view controller. Leave a little space at the bottom and place a label as well. Everything should look approximately like the picture below:
 <p align="center">
