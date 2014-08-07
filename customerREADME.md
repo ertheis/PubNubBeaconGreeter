@@ -18,7 +18,7 @@ Start by embedding the default view in a navigation controller. Then we'll add t
 
 <p align="center">
   <img src="https://github.com/ertheis/PubNubBeaconGreeter/blob/master/TutorialPics/ProfileInputUI.png" alt="basic storefront UI" width="250">
-</p
+</p>
 
 [1]: http://www.github.com/ertheis/PubNubBeaconGreeter
 [2]: https://github.com/ertheis/Smart-iBeacon/blob/master/README.md
