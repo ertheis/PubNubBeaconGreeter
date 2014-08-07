@@ -5,7 +5,7 @@ This tutorial assumes the reader has basic knowledge of Apple's iBeacon protocol
 
 Every morning on the way to work, I grab a latte from a coffee shop near my apartment. The baristas know me by name, and they know my usual order. It would be awesome if everywhere people shopped, they were treated as an individual instead of "just another customer". However, it is difficult for an employee (say, a barista) to remember the names of the hundreds of people they interact with on a daily basis.
 
-We came up with a solution using Apple's iBeacon protocol and PubNub's data streaming network. In this tutorial, we will build a greeter application. Its primary functionality is to let a shopkeeper know when a customer enters the store and provide the shopkeeper with a little bit of information about the customer. This information allows the shopkeeper to personalize and improve the customer's experience.
+We came up with a solution using Apple's iBeacon protocol and PubNub's data streaming network. In this tutorial, we will build a greeter application. Its primary functionality is to let a shopkeeper know when a customer enters the store and provide the shopkeeper with a little bit of information about the customer. It's basically [our presence feature][7] in real life. This information allows the shopkeeper to personalize and improve the customer's experience.
 
 ##The Storefront Application: the UI and iBeacon Broadcast
 The intent of the storefront application is almost exclusively to display information. There isn't any required interaction between it and the shopkeeper. It merely assists the user with remembering the people they are intereacting with. The view consists of a table view and a status label at the bottom. The table view contains a list of customers currently in the store and a bit of information about them (in our case, their name, favorite drink, and a photo). 
@@ -253,11 +253,13 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
 }
 ```
 
-That's it for the setup; you're now able to populate cells of a table view and broadcast an iBeacon from your iDevice. Stay tuned for part two of the series.
+That's it for the setup; you're now able to populate cells of a table view and broadcast an iBeacon from your iDevice. If you'd like to test your app's ability to automatically switch to tableData as a source, you can hardcode it as a dictionary, as PNObjects inherit from that data structure. Note that this is a dictionary of dictionaries (a key value pair for each pereson in the shop). Here's an example:
+
+["user1":["textLabel":"Eric", "detailTextLabel":"Vanilla Latte", "imgPath":"./DefaultPic"], "user2":["textLabel":"Eric's Clone", "detailTextLabel":"Cappuccino", "imgPath":"./DefaultPic"]]
 
 ##The Storefront Application: Fetching User Profiles
 
-This is part 2 of 4 of the tutorials covering a storefront greeter application. In this post, I'll show you how to sync your UI with an updating dictionary of customers in your shop. Additionally, you'll breifly notify users of new customers.
+In this secton, I'll show you how to sync your UI with an updating dictionary of customers in your shop. Additionally, you'll breifly notify users of new customers.
 
 ###Connecting to PubNub
 As mentioned in the previous post, you should have already loaded the [PubNub iOS SDK][5] into your project. We'll begin by setting up the connection to PubNub. If you're following on the Xcode project, I defined my keys in the AppDelegate class so that I can access them if using PubNub in other parts of my application.  Define a PNConfiguration and set the configuration before connecting. After you connect, begin synchronization with a database who's name contains the major and minor identification numbers you are broadcasting with your iBeacon. Subscribe to a channel named similarly.
@@ -313,8 +315,184 @@ Whenever an object change occurs (and on the initial copy of the object) we inst
 ```
 
 ###Highlighting Changes
-Because of the way we set up our table view in the last post, it will automatically switch its data source to our DataSync object when it has at least one element in it (when there is at least one person in the store). However, we also want to temporarily highlight any new customers in the table. We do this in the cellForRowAtIndexPath function. Recall that we receive the keys of new rows over the channel we subscribed on. Thus, we can iterate through the array of keys and temporarily change them red. Once we have signaled the cell to turn red for 1.5 seconds, we remove its key from the array. Note that when we turn the row red, we also turn the boarder of the profile image red to match and the row's text white for readability. To delay the row's return to its original colors, we use the dispatch_after function.
+Because of the way we set up our table view in the last post, it will automatically switch its data source to our DataSync object when it has at least one element in it (when there is at least one person in the store). However, we also want to temporarily highlight any new customers in the table. We will do this in the cellForRowAtIndexPath function after we've determined we have customers and not default data. Recall that we receive the keys of new rows over the channel we subscribed on. Thus, we can iterate through the array of keys and temporarily change their corresponding cells red. Once we have signaled the cell to turn red for 1.5 seconds, we remove its key from the array, as the data is no longer "new".  To delay the row's return to its original colors, we use the dispatch_after function.
 ```Swift
+for var index = 0; index < changeData.count; index++ {
+  if tableData.allKeys[indexPath.row] as String == changeData[index] {
+    //turn the cell red
+    let delay = 1.5 * Double(NSEC_PER_SEC)
+    let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+    dispatch_after(time, dispatch_get_main_queue()) {
+      //turn the cell white
+    }
+    changeData.removeAtIndex(index)
+    break
+  }
+}
+```
+
+Instead of writing duplicate code, we'll decompose the cell color changer into a new function. Note that when we turn the row red, we also turn the boarder of the profile image red to match and the row's text white for readability.
+
+```Swift
+func cellFormater(cell: UITableViewCell, highlighted: Bool) {
+        if highlighted {
+            cell.backgroundColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1)
+            cell.textLabel.textColor = UIColor.whiteColor()
+            cell.detailTextLabel.textColor = UIColor.whiteColor()
+            cell.imageView.layer.borderColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1).CGColor
+        } else {
+            cell.backgroundColor = UIColor.whiteColor()
+            cell.textLabel.textColor = UIColor.blackColor()
+            cell.detailTextLabel.textColor = UIColor.blackColor()
+            cell.imageView.layer.borderColor = UIColor.whiteColor().CGColor
+        }
+    }
+```
+
+Thus, after replacing the cell formatting code with our function, the relevent part of our cellForRowAtIndexPath should look something like this:
+```Swift
+func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+    
+    //dequeue or create a cell
+    
+    cellFormater(cell, highlighted: false)
+     
+    var cellData: Dictionary<String, String>
+    if tableData.count < 1 {
+        cellData = self.defaultData
+    } else {
+        cellData = tableData.allValues[indexPath.row] as Dictionary
+        for var index = 0; index < changeData.count; index++ {
+            if tableData.allKeys[indexPath.row] as String == changeData[index] {
+                cellFormater(cell, highlighted: true)
+                let delay = 1.5 * Double(NSEC_PER_SEC)
+                let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                dispatch_after(time, dispatch_get_main_queue()) {
+                    self.cellFormater(cell, highlighted: false)
+                }
+                changeData.removeAtIndex(index)
+                break
+            }
+        }
+    }
+    
+    //set the cell's fields to the data
+    
+}
+```
+
+That's it for the storefront app. You're all set up to receive real time updates on who's at a location. So you can see everything in one place, I'll post the entire ViewController class below. In the next blog post, we'll write the customer app that supplies the DataSync object with information (when in range of the iBeacon we're broadcasting).
+
+```Swift
+//
+//  ViewController.swift
+//  PubNubGreeter
+//
+//  Created by Eric Theis on 7/18/14.
+//  Copyright (c) 2014 PubNub. All rights reserved.
+//
+
+import UIKit
+import CoreLocation
+import CoreBluetooth
+
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource, CBPeripheralManagerDelegate {
+    
+    @IBOutlet var tableView: UITableView!
+    @IBOutlet var status: UILabel!
+    var beaconText = "Loading..."
+    
+    let defaultData = ["textLabel":"Cutomers currently in the store will appear here.", "detailTextLabel":"iBeacon broadcast has started with Major: 9, Minor: 6.", "imgPath":"./DefaultPic"]
+    var tableData:PNObject = PNObject()
+    var changeData:[String] = []
+    
+    var region = CLBeaconRegion()
+    var beaconData = NSDictionary()
+    var manager = CBPeripheralManager()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        var appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        
+        let uuidObj = NSUUID(UUIDString: "0CF052C2-97CA-407C-84F8-B62AAC4E9020")
+        self.region = CLBeaconRegion(proximityUUID: uuidObj, major: 9, minor: 6, identifier: "com.pubnub.test")
+        beaconData = self.region.peripheralDataWithMeasuredPower(nil) as NSDictionary
+        self.manager = CBPeripheralManager(delegate: self, queue: nil)
+        
+        let myConfig = PNConfiguration(forOrigin: "pubsub-beta.pubnub.com", publishKey: appDelegate.pubKey, subscribeKey: appDelegate.subKey, secretKey: nil, authorizationKey: appDelegate.authKey)
+        PubNub.setConfiguration(myConfig)
+        PubNub.connect()
+        PubNub.startObjectSynchronization(appDelegate.sync_db)
+        PubNub.subscribeOnChannel(PNChannel.channelWithName("GreeterChannel96") as PNChannel)
+        
+        PNObservationCenter.defaultCenter().addObjectSynchronizationStartObserver(self) { (syncObject: PNObject!, error: PNError!) in
+            if !error {
+                self.tableData = syncObject
+                self.tableView.reloadData()
+            } else {
+                println("OBSERVER: \(error.code)")
+                println("OBSERVER: \(error.description)")
+            }
+        }
+        
+        PNObservationCenter.defaultCenter().addObjectChangeObserver(self) { (syncObject: PNObject!) in
+            self.tableData = syncObject
+            self.status.text = "Presence Change"
+            let delay = 1 * Double(NSEC_PER_SEC)
+            let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+            dispatch_after(time, dispatch_get_main_queue(), {self.status.text = self.beaconText})
+            self.tableView.reloadData()
+        }
+        
+        PNObservationCenter.defaultCenter().addMessageReceiveObserver(self) { (message: PNMessage!) in
+            self.changeData.append(message.message as String)
+        }
+    }
+    
+    func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager!) {
+        if(peripheral.state == CBPeripheralManagerState.PoweredOn) {
+            println("powered on")
+            self.beaconText = "Beacon Advertising"
+            self.status.text = self.beaconText
+            self.manager.startAdvertising(beaconData)
+        } else if(peripheral.state == CBPeripheralManagerState.PoweredOff) {
+            println("powered off")
+            self.beaconText = "Beacon Off"
+            self.status.text = self.beaconText
+            self.manager.stopAdvertising()
+        }
+    }
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+        if tableData.count > 0 {
+            return tableData.count
+        }
+        return 1
+    }
+    
+    func tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+        return 80
+    }
+    
+    func cellFormater(cell: UITableViewCell, highlighted: Bool) {
+        if highlighted {
+            cell.backgroundColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1)
+            cell.textLabel.textColor = UIColor.whiteColor()
+            cell.detailTextLabel.textColor = UIColor.whiteColor()
+            cell.imageView.layer.borderColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1).CGColor
+        } else {
+            cell.backgroundColor = UIColor.whiteColor()
+            cell.textLabel.textColor = UIColor.blackColor()
+            cell.detailTextLabel.textColor = UIColor.blackColor()
+            cell.imageView.layer.borderColor = UIColor.whiteColor().CGColor
+        }
+    }
+    
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         var potentialCell = tableView.dequeueReusableCellWithIdentifier("cell") as? UITableViewCell
         var cell: UITableViewCell
@@ -324,38 +502,25 @@ Because of the way we set up our table view in the last post, it will automatica
             cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "cell")
         }
         
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
-        cell.textLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        cell.textLabel.numberOfLines = 0
-        cell.imageView.layer.borderColor = UIColor.whiteColor().CGColor
+        cellFormater(cell, highlighted: false)
         
         var cellData: Dictionary<String, String>
         if tableData.count < 1 {
             cellData = self.defaultData
         } else {
             cellData = tableData.allValues[indexPath.row] as Dictionary
-            //START OF NEW CODE
-            if !changeData.isEmpty {
-                for index in 0...changeData.count-1 {
-                    if tableData.allKeys[indexPath.row] as String == changeData[index] {
-                        cell.backgroundColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1)
-                        cell.textLabel.textColor = UIColor.whiteColor()
-                        cell.detailTextLabel.textColor = UIColor.whiteColor()
-                        cell.imageView.layer.borderColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1).CGColor
-                        let delay = 1.5 * Double(NSEC_PER_SEC)
-                        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-                        dispatch_after(time, dispatch_get_main_queue()) {
-                            cell.backgroundColor = UIColor.whiteColor()
-                            cell.textLabel.textColor = UIColor.blackColor()
-                            cell.detailTextLabel.textColor = UIColor.blackColor()
-                            cell.imageView.layer.borderColor = UIColor.whiteColor().CGColor
-                        }
-                        changeData.removeAtIndex(index)
-                        break
+            for var index = 0; index < changeData.count; index++ {
+                if tableData.allKeys[indexPath.row] as String == changeData[index] {
+                    cellFormater(cell, highlighted: true)
+                    let delay = 1.5 * Double(NSEC_PER_SEC)
+                    let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                    dispatch_after(time, dispatch_get_main_queue()) {
+                        self.cellFormater(cell, highlighted: false)
                     }
+                    changeData.removeAtIndex(index)
+                    break
                 }
             }
-            //END OF NEW CODE
         }
         
         cell.textLabel.text = cellData["textLabel"]
@@ -374,6 +539,8 @@ Because of the way we set up our table view in the last post, it will automatica
         cell.imageView.layer.masksToBounds = true
         return cell
     }
+    
+}
 ```
 
 [1]: http://www.github.com/ertheis/PubNubBeaconGreeter
@@ -382,3 +549,4 @@ Because of the way we set up our table view in the last post, it will automatica
 [4]: http://www.pubnub.com/how-it-works/data-streams/
 [5]: http://www.pubnub.com/docs/objective-c/iOS/ios-sdk.html
 [6]: insertSmartIBeaconPost
+[7]: http://www.pubnub.com/how-it-works/presence/
