@@ -14,13 +14,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     @IBOutlet var tableView: UITableView!
     @IBOutlet var status: UILabel!
-    var beaconText = "Loading"
+    var beaconText = "Loading..."
     
     let defaultData = ["textLabel":"Cutomers currently in the store will appear here.", "detailTextLabel":"iBeacon broadcast has started with Major: 9, Minor: 6.", "imgPath":"./DefaultPic"]
     var tableData:PNObject = PNObject()
     var changeData:[String] = []
-    
-    let uuidObj = NSUUID(UUIDString: "0CF052C2-97CA-407C-84F8-B62AAC4E9020")
     
     var region = CLBeaconRegion()
     var beaconData = NSDictionary()
@@ -30,10 +28,9 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         super.viewDidLoad()
         var appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         
+        let uuidObj = NSUUID(UUIDString: "0CF052C2-97CA-407C-84F8-B62AAC4E9020")
         self.region = CLBeaconRegion(proximityUUID: uuidObj, major: 9, minor: 6, identifier: "com.pubnub.test")
         beaconData = self.region.peripheralDataWithMeasuredPower(nil) as NSDictionary
-        println(beaconData.allKeys)
-        println(beaconData.allValues)
         self.manager = CBPeripheralManager(delegate: self, queue: nil)
         
         let myConfig = PNConfiguration(forOrigin: "pubsub-beta.pubnub.com", publishKey: appDelegate.pubKey, subscribeKey: appDelegate.subKey, secretKey: nil, authorizationKey: appDelegate.authKey)
@@ -80,11 +77,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
     func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
         if tableData.count > 0 {
             return tableData.count
@@ -96,6 +88,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         return 80
     }
     
+    func cellFormater(cell: UITableViewCell, highlighted: Bool) {
+        if highlighted {
+            cell.backgroundColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1)
+            cell.textLabel.textColor = UIColor.whiteColor()
+            cell.detailTextLabel.textColor = UIColor.whiteColor()
+            cell.imageView.layer.borderColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1).CGColor
+        } else {
+            cell.backgroundColor = UIColor.whiteColor()
+            cell.textLabel.textColor = UIColor.blackColor()
+            cell.detailTextLabel.textColor = UIColor.blackColor()
+            cell.imageView.layer.borderColor = UIColor.whiteColor().CGColor
+        }
+    }
+    
     func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
         var potentialCell = tableView.dequeueReusableCellWithIdentifier("cell") as? UITableViewCell
         var cell: UITableViewCell
@@ -105,34 +111,23 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "cell")
         }
         
-        cell.selectionStyle = UITableViewCellSelectionStyle.None
-        cell.textLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
-        cell.textLabel.numberOfLines = 0
-        cell.imageView.layer.borderColor = UIColor.whiteColor().CGColor
+        cellFormater(cell, highlighted: false)
         
         var cellData: Dictionary<String, String>
         if tableData.count < 1 {
             cellData = self.defaultData
         } else {
             cellData = tableData.allValues[indexPath.row] as Dictionary
-            if !changeData.isEmpty {
-                for index in 0...changeData.count-1 {
-                    if tableData.allKeys[indexPath.row] as String == changeData[index] {
-                        cell.backgroundColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1)
-                        cell.textLabel.textColor = UIColor.whiteColor()
-                        cell.detailTextLabel.textColor = UIColor.whiteColor()
-                        cell.imageView.layer.borderColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1).CGColor
-                        let delay = 1.5 * Double(NSEC_PER_SEC)
-                        let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
-                        dispatch_after(time, dispatch_get_main_queue()) {
-                            cell.backgroundColor = UIColor.whiteColor()
-                            cell.textLabel.textColor = UIColor.blackColor()
-                            cell.detailTextLabel.textColor = UIColor.blackColor()
-                            cell.imageView.layer.borderColor = UIColor.whiteColor().CGColor
-                        }
-                        changeData.removeAtIndex(index)
-                        break
+            for var index = 0; index < changeData.count; index++ {
+                if tableData.allKeys[indexPath.row] as String == changeData[index] {
+                    cellFormater(cell, highlighted: true)
+                    let delay = 1.5 * Double(NSEC_PER_SEC)
+                    let time = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                    dispatch_after(time, dispatch_get_main_queue()) {
+                        self.cellFormater(cell, highlighted: false)
                     }
+                    changeData.removeAtIndex(index)
+                    break
                 }
             }
         }
