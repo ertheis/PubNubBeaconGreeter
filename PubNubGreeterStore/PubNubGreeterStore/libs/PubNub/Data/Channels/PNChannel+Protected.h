@@ -68,11 +68,6 @@ shouldUpdatePresenceObservingFlag:(BOOL)shouldUpdatePresenceObservingFlag;
 - (BOOL)isPresenceObserver;
 
 /**
- Return whether channel created for data object synchronization or not.
- */
-- (BOOL)isObjectSynchronizationChannel;
-
-/**
  * Depending on whether channel was configured to receive presence events or not it will return presence observing
  * channel
  */

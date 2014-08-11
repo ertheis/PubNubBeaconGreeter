@@ -16,6 +16,7 @@
 //
 
 #import "PNMessagingChannel.h"
+#import "PNSynchronizationChannel+Protected.h"
 #import "PNConnectionChannel+Protected.h"
 #import "PNChannelEventsResponseParser.h"
 #import "PNChannelPresence+Protected.h"
@@ -1175,7 +1176,7 @@ typedef NS_OPTIONS(NSUInteger, PNMessagingConnectionStateFlag)  {
         if ([synchronizationChannels count]) {
 
             [self.messagingDelegate messagingChannel:self
-              didStartObjectSynchronizationAtChannel:[synchronizationChannels lastObject]];
+              didStartObjectSynchronizationAtChannel:[PNSynchronizationChannel nonWildcardChannelFromList:synchronizationChannels]];
         }
     }
     
@@ -1872,7 +1873,7 @@ typedef NS_OPTIONS(NSUInteger, PNMessagingConnectionStateFlag)  {
         
         if (!fetchPresenceChannelsOnly) {
 
-            if (shouldExcludeSynchronizationChannels || ![channel isObjectSynchronizationChannel]) {
+            if (shouldExcludeSynchronizationChannels || ![PNSynchronizationChannel isObjectSynchronizationChannel:channel.name]) {
 
                 [fullChannelsList addObject:channel];
             }
@@ -2402,7 +2403,7 @@ typedef NS_OPTIONS(NSUInteger, PNMessagingConnectionStateFlag)  {
                         if ([synchronizationChannels count]) {
 
                             [self.messagingDelegate messagingChannel:self
-                              didStartObjectSynchronizationAtChannel:[synchronizationChannels lastObject]];
+                              didStartObjectSynchronizationAtChannel:[PNSynchronizationChannel nonWildcardChannelFromList:synchronizationChannels]];
                         }
                     }
                 }

@@ -27,6 +27,7 @@
 #import "PNAccessRightsCollection+Protected.h"
 #import "PNSynchronizationChannel+Protected.h"
 #import "PNMessageHistoryRequest+Protected.h"
+#import "PNObjectModificationInformation.h"
 #import "PNObjectFetchRequest+Protected.h"
 #import "PNConnectionChannel+Protected.h"
 #import "PNOperationStatus+Protected.h"
@@ -733,6 +734,44 @@
 
         error.associatedObject = information;
         [self.serviceDelegate serviceChannel:self objectFetchDidFailWithError:error];
+    }
+    // Check whether request was sent for remote object modification or not
+    else if ([request isKindOfClass:[PNObjectModificationRequest class]]) {
+        
+        PNObjectModificationInformation *information = ((PNObjectModificationRequest *)request).information;
+        
+        [PNLogger logCommunicationChannelErrorMessageFrom:self message:^NSString * {
+            
+            NSString *message = [NSString stringWithFormat:@"CAN'T UPDATE OBJECT DATA WITH IDENTIFIER: %@ "
+                                 "BECAUSE OF ERROR: %@", information.objectIdentifier, error];
+            if(information.type == PNObjectReplaceType) {
+                
+                message = [NSString stringWithFormat:@"CAN'T REPLACE OBJECT DATA WITH IDENTIFIER: %@ "
+                           "BECAUSE OF ERROR: %@", information.objectIdentifier, error];
+            }
+            else if(information.type == PNObjectDeleteType) {
+                
+                message = [NSString stringWithFormat:@"CAN'T DELETE OBJECT DATA WITH IDENTIFIER: %@ "
+                           "BECAUSE OF ERROR: %@", information.objectIdentifier, error];
+            }
+            
+            
+            return message;
+        }];
+        
+        error.associatedObject = information;
+        if(information.type == PNObjectUpdateType) {
+            
+            [self.serviceDelegate serviceChannel:self objectUpdateDidFailWithError:error];
+        }
+        else if(information.type == PNObjectReplaceType) {
+            
+            [self.serviceDelegate serviceChannel:self objectReplaceDidFailWithError:error];
+        }
+        else {
+            
+            [self.serviceDelegate serviceChannel:self objectDeleteDidFailWithError:error];
+        }
     }
     // Check whether this is 'Post message' request or not
     else if ([request isKindOfClass:[PNMessagePostRequest class]]) {

@@ -52,7 +52,7 @@
                             stringByReplacingOccurrencesOfString:@"pn_dstr_" withString:@""];
     }
 
-    PNSynchronizationChannel *channel = [super channelWithName:channelName shouldObservePresence:NO];
+    PNSynchronizationChannel *channel = (PNSynchronizationChannel *)[super channelWithName:channelName shouldObservePresence:NO];
     channel.objectIdentifier = objectIdentifier;
     channel.partialObjectDataPath = partialObjectDataPath;
     channel.objectSyncronizationChannel = YES;
@@ -67,16 +67,54 @@
     NSString *transactionChannelName = [NSString stringWithFormat:@"pn_dstr_%@", objectIdentifier];
 
 
-    return @[[PNSynchronizationChannel channelForObject:objectIdentifier  dataPath:partialObjectDataPath],
+    return @[[PNSynchronizationChannel channelForObject:objectIdentifier dataPath:partialObjectDataPath],
              [PNSynchronizationChannel channelForObject:wildCardChannelName dataPath:([partialObjectDataPath length] > 0 ?
                                                                                       [NSString stringWithFormat:@"%@.*", partialObjectDataPath] :
                                                                                       @"*")],
              [PNSynchronizationChannel channelForObject:transactionChannelName dataPath:partialObjectDataPath]];
 }
 
++ (PNSynchronizationChannel *)nonWildcardChannelFromList:(NSArray *)channels {
+    
+    __block PNSynchronizationChannel *nonWildcardChannel = nil;
+    [channels enumerateObjectsUsingBlock:^(PNChannel *channel, NSUInteger channelIdx, BOOL *channelEnumeratorStop) {
+        
+        if ([self isObjectSynchronizationChannel:channel.name]) {
+
+            if ([channel.name hasPrefix:@"pn_ds_"] && ![((PNSynchronizationChannel *)channel).partialObjectDataPath hasSuffix:@".*"]) {
+                
+                nonWildcardChannel = (PNSynchronizationChannel *)channel;
+            }
+            *channelEnumeratorStop = (nonWildcardChannel != nil);
+        }
+    }];
+    
+    
+    return nonWildcardChannel;
+}
+
 + (BOOL)isObjectSynchronizationChannel:(NSString *)channelName {
     
     return ([channelName hasPrefix:@"pn_ds_"] || [channelName hasPrefix:@"pn_dstr_"]);
+}
+
+
+#pragma mark - Instance methods
+
+- (NSString *)escapedName {
+
+    NSString *name = self.name;
+    if ([name hasPrefix:@"pn_ds_"]) {
+
+        if ([name hasSuffix:@".*"]) {
+
+            name = [name stringByReplacingOccurrencesOfString:@".*" withString:@""];
+        }
+        name = [name stringByAppendingFormat:@".%@", self.partialObjectDataPath];
+    }
+
+
+    return [name percentEscapedString];
 }
 
 #pragma mark -

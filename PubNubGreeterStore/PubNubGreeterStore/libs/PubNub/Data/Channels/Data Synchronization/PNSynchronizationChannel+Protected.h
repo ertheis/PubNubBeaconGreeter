@@ -78,6 +78,14 @@
 + (NSArray *)channelsForObject:(NSString *)objectIdentifier dataPath:(NSString *)partialObjectDataPath;
 
 /**
+ Try to extract non-wildcard synchronization channel from provided list of channels.
+ 
+ @param channels
+ Reverence on \a NSArray which contains list of channels (it can be \b PNChannel of \b PNSynchronizationChannel instances).
+ */
++ (PNSynchronizationChannel *)nonWildcardChannelFromList:(NSArray *)channels;
+
+/**
  Check whether specified name correspond to one of data synchronization channels or not.
  
  @param channelName
