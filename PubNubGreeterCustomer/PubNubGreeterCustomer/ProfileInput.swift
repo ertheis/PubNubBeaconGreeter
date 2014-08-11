@@ -24,7 +24,9 @@ class ProfileInput: UIViewController, UITextFieldDelegate, UIImagePickerControll
     }
     
     @IBAction func takePicture(sender: UIButton) {
-        startCameraController()
+        if !startCameraController() {
+            println("The camera is not accessible.")
+        }
     }
     
     @IBAction func nameFilled(sender: UITextField) {
@@ -79,9 +81,5 @@ class ProfileInput: UIViewController, UITextFieldDelegate, UIImagePickerControll
     func textFieldShouldReturn(textField: UITextField!) -> Bool {
         textField.resignFirstResponder()
         return true
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
 }

@@ -15,19 +15,19 @@ class CustomerComm: NSObject, PNDelegate {
     var authKey = ""
     var sync_db = "CoffeeShop"
     
-    var name = "John"
-    var favorite = "Club Soda"
+    var name = "Default Name"
+    var favorite = "Default Drink"
     var pic = "./DefaultPic"
     var capturedPicData = NSData()
     
     var inShop = false
     var syncing = false
     
-    var inside: Point
+    var inside: BeaconNumbers
     var uuid: String = ""
     
     override init() {
-        inside = Point(major: -1, minor: -1)
+        inside = BeaconNumbers(major: -1, minor: -1)
         super.init()
         PubNub.setDelegate(self)
         let myConfig = PNConfiguration(forOrigin: "pubsub-beta.pubnub.com", publishKey: self.pubKey, subscribeKey: self.subKey, secretKey: nil, authorizationKey: self.authKey)
@@ -63,7 +63,7 @@ class CustomerComm: NSObject, PNDelegate {
             } else {
                 PubNub.updateObject("\(self.sync_db)\(major)\(minor)", withData: [self.uuid:["textLabel":"Name: \(self.name)", "detailTextLabel":"Favorite Drink: \(self.favorite)", "imgPath":self.pic]])
             }
-            inside = Point(major: major, minor: minor)
+            inside = BeaconNumbers(major: major, minor: minor)
             inShop = true
         }
     }
@@ -71,13 +71,13 @@ class CustomerComm: NSObject, PNDelegate {
     func leaveShop(major: Int, minor: Int) {
         if inShop {
             PubNub.deleteObject("\(self.sync_db)\(major)\(minor)", dataPath: self.uuid)
-            inside = Point(major: -1, minor: -1)
+            inside = BeaconNumbers(major: -1, minor: -1)
             inShop = false
         }
     }
 }
 
-class Point: NSObject {
+class BeaconNumbers: NSObject {
     var major: Int
     var minor: Int
     
