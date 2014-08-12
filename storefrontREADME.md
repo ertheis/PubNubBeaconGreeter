@@ -1,4 +1,4 @@
-#iBeacon Storefront Greeter
+#iBeacon Storefront Greeter: The Storefront App
 You can find Xcode projects containing the customer and storefront applications shown in this blog series's video [on my github][1].
 
 This tutorial assumes the reader has basic knowledge of Apple's iBeacon protocol and its specifications. For an introductory tutorial to iBeacons, see the [Smart iBeacon][2] post.
