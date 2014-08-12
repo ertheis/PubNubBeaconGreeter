@@ -208,7 +208,7 @@ Now that we've made the layer with which our next view controller will interface
 
 The code for this class simply formats the view and sets up the iBeacon detection. When we're in range of an iBeacon, we range it and decide at what distances we want our user to "enter shop" and "leave shop". If you know how iBeacons work, go ahead and skim/implement this and move on to the next section. The one point of note is that when we leave a region, we can just use the BeaconNumbers object to retreive the major and minor numbers of the beacon we just lost.
 
-For those of you who didn't read the first tutorial on iBeacons (shame!), I'll give a closer overview of what I did. I start by retreiving the data for my labels and creating a region associated with the UUID we used in the store app. This allows us to view beacons emitting that UUID. We then use delegate functions to notify ourselves when we've found or lost a beacon and detect the range of beacons we've found. Once we've ranged a beacon (which means that in addition to seeing a beacon, we've determined how far/close it is) we can decide based on its distance whether we should be calling the enterShop or leaveShop functions attached to our comm object. All along the way, I'm updating the status label so our tester can see the iBeacon state.
+For those of you who didn't read the first tutorial on iBeacons (shame!), I'll give a closer overview of what I did. In the viewDidLoad function, I start by retreiving the data for my labels and creating a region associated with the UUID we used in the store app. This allows us to view beacons emitting that UUID. We then start monitoring for said beacons. We then use delegate functions to notify ourselves when we've found or lost a beacon and detect the range of beacons we've found. Once we've ranged a beacon (which means that in addition to seeing a beacon, we've determined how far/close it is) we can decide based on its distance whether we should be calling the enterShop or leaveShop functions attached to our comm object. All along the way, I'm updating the status label so our tester can see the iBeacon state. Normally, it's bad practice to attempt to range beacons in the didStartMonitoringForRegion function. However, if you start monitoring inside the range of an iBeacon, the didEnterRegion function is not triggered (you'd have to leave the beacon area then re-enter), and it's nice to not have to leave the building to test your app..
 ```Swift
 //
 //  ViewController.swift
@@ -303,6 +303,71 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
 
 ##Implement PubNub DataSync and DataStream
 Now that we have the iBeacon triggering our enterShop and leaveShop functions, we can use those functions to give or take our information from the storefront app. Recall that our storefront app is syncing with the DataSync object and PNChannel containing its iBeacon's major and minor identification numbers. Thus, when we are in rage of an iBeacon, we can use those numbers to decide where to publish data.
+
+###The Road So Far
+We've already created the CustomerComm class and created most of the properties we need. Here's what your file should look like at this point:
+```Swift
+//
+//  CustomerComm.swift
+//  PubNubGreeterCustomer
+//
+//  Created by Eric Theis on 7/25/14.
+//  Copyright (c) 2014 PubNub. All rights reserved.
+//
+
+import Foundation
+
+class CustomerComm: NSObject, PNDelegate {
+    var name = "Default Name"
+    var favorite = "Default Drink"
+    var pic = "./DefaultPic"
+    var capturedPicData = NSData()
+    
+    var inside: BeaconNumbers
+    
+    override init() {
+        inside = BeaconNumbers(major: -1, minor: -1)
+        super.init()
+    }
+    
+    func enterShop(major: Int, minor: Int) {
+    }
+    
+    func leaveShop(major: Int, minor: Int) {
+        }
+    }
+}
+
+class BeaconNumbers: NSObject {
+    var major: Int
+    var minor: Int
+    
+    init(major: Int, minor: Int) {
+        self.major = major
+        self.minor = minor
+        super.init()
+    }
+}
+```
+
+###Connect to PubNub
+We'll start by defining our PubNub client information and the prefixes for our channel and DataSync object. Remember that the prefix string prepends the major and minor numbers you receive from the iBeacon trigger. If you print the full string, it should match the name of the database and channel your storefront app is listening on.
+
+We'll also 
+```Swfit
+class CustomerComm: NSObject, PNDelegate {
+
+    let pubKey = "your publish key"
+    let subKey = "your subscribe key"
+    var authKey = ""
+    var sync_db = "CoffeeShop" // the DataSync prefix
+    var sync_channel = "GreeterChannel" // the channel prefix
+
+// insert the rest of the class definition from above
+}
+```
+
+
 
 [1]: http://www.github.com/ertheis/PubNubBeaconGreeter
 [2]: https://github.com/ertheis/Smart-iBeacon/blob/master/README.md
