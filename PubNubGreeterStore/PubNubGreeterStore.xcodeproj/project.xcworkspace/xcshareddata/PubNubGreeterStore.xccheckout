@@ -12,6 +12,8 @@
 	<dict>
 		<key>56EBB223B9988A70AED0A38D6C597A83C75862B0</key>
 		<string>https://github.com/ertheis/PubNubBeaconGreeter.git</string>
+		<key>E43D1A5E7D6A1BB1B77CBD55622D3351A48F12E0</key>
+		<string>https://github.com/pubnub/objective-c.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>PubNubGreeterStore/PubNubGreeterStore.xcodeproj</string>
@@ -19,6 +21,8 @@
 	<dict>
 		<key>56EBB223B9988A70AED0A38D6C597A83C75862B0</key>
 		<string>../../..</string>
+		<key>E43D1A5E7D6A1BB1B77CBD55622D3351A48F12E0</key>
+		<string>../../../../objective-c</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
 	<string>https://github.com/ertheis/PubNubBeaconGreeter.git</string>
@@ -28,6 +32,14 @@
 	<string>56EBB223B9988A70AED0A38D6C597A83C75862B0</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>E43D1A5E7D6A1BB1B77CBD55622D3351A48F12E0</string>
+			<key>IDESourceControlWCCName</key>
+			<string>objective-c</string>
+		</dict>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
