@@ -148,6 +148,161 @@ The last thing we do is allow the user to dismiss the keyboard when they hit ent
 ```
 
 ##The iBeacon Trigger
+Now we get to the interesting part. In this section we'll set up iBeacon detection and use it to trigger updates for our store side app. In this tutorial, I set the "enter shop" trigger at "immediate" range and the "leave shop" trigger at "far" for easy testing.
+
+###Back to the Communication Class
+Because we decided to store all data in the communication class, we'll build here first. We'll also put the functions that are triggered by the iBeacon here. Start by creating a class called BeaconNumbers (in the same file as your "CustomerComm" class) as well as a property containing an object of it. You can instantiate it in the init function. This data structure will allow us to leave a shop when we don't necessarily have access to a ranged beacon.
+```Swift
+class CustomerComm: NSObject, PNDelegate {
+    var name = "Default Name"
+    var favorite = "Default Drink"
+    var pic = "./DefaultPic"
+    var capturedPicData = NSData()
+    
+    var inside: BeaconNumbers
+    
+    override init(){
+        inside = BeaconNumbers(major: -1, minor: -1)
+        super.init()
+    }
+}
+
+class BeaconNumbers: NSObject {
+    var major: Int
+    var minor: Int
+    
+    init(major: Int, minor: Int) {
+        self.major = major
+        self.minor = minor
+        super.init()
+    }
+}
+```
+
+As stated above, we also want to make enter and exit functions (for now, we'll leave them empty).
+```Swift
+class CustomerComm: NSObject, PNDelegate {
+    //insert properties here
+    
+    override init(){
+        inside = BeaconNumbers(major: -1, minor: -1)
+        super.init()
+    }
+    
+    func enterShop(major: Int, minor: Int) {
+    }
+    
+    func leaveShop(major: Int, minor: Int) {
+    }
+}
+
+//BeaconNumbers class
+```
+
+###Detect an iBeacon
+Now that we've made the layer with which our next view controller will interface, go ahead and create a new view controller and set the "next" button from the profile input view to load it. In the demo code, I just called it ViewController. For the demo's purposes, I included labels for the name, favorite drink, and status in addition to a UIImageView to display the profile pic.
+
+<p align="center">
+  <img src="https://github.com/ertheis/PubNubBeaconGreeter/blob/master/TutorialPics/ViewControllerStoryboard.png" alt="basic storefront UI" width="250">
+</p>
+
+The code for this class simply formats the view and sets up the iBeacon detection. When we're in range of an iBeacon, we range it and decide at what distances we want our user to "enter shop" and "leave shop". If you know how iBeacons work, go ahead and skim/implement this and move on to the next section. The one point of note is that when we leave a region, we can just use the BeaconNumbers object to retreive the major and minor numbers of the beacon we just lost.
+
+For those of you who didn't read the first tutorial on iBeacons (shame!), I'll give a closer overview of what I did. I start by retreiving the data for my labels and creating a region associated with the UUID we used in the store app. This allows us to view beacons emitting that UUID. We then use delegate functions to notify ourselves when we've found or lost a beacon and detect the range of beacons we've found. Once we've ranged a beacon (which means that in addition to seeing a beacon, we've determined how far/close it is) we can decide based on its distance whether we should be calling the enterShop or leaveShop functions attached to our comm object. All along the way, I'm updating the status label so our tester can see the iBeacon state.
+```Swift
+//
+//  ViewController.swift
+//  PubNubGreeterCustomer
+//
+//  Created by Eric Theis on 7/25/14.
+//  Copyright (c) 2014 PubNub. All rights reserved.
+//
+
+import UIKit
+import CoreLocation
+import CoreBluetooth
+
+class ViewController: UIViewController, CLLocationManagerDelegate {
+    @IBOutlet var nameLabel: UILabel!
+    @IBOutlet var favoriteLabel: UILabel!
+    @IBOutlet var profPic: UIImageView!
+    @IBOutlet var status: UILabel!
+    
+    let uuidObj = NSUUID(UUIDString: "0CF052C2-97CA-407C-84F8-B62AAC4E9020")
+    
+    var region = CLBeaconRegion()
+    var manager = CLLocationManager()
+    
+    let appDelegate: AppDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        nameLabel.text = "Name: \(appDelegate.comm.name)"
+        favoriteLabel.text = "Favorite Drink: \(appDelegate.comm.favorite)"
+        profPic.image = UIImage(data: appDelegate.comm.capturedPicData)
+        profPic.layer.cornerRadius = 100
+        profPic.layer.borderWidth = 1
+        profPic.layer.masksToBounds = true
+        manager.delegate = self
+        region = CLBeaconRegion(proximityUUID: uuidObj, identifier: "com.pubnub.test")
+        var os = UIDevice.currentDevice().systemVersion
+        if(os.substringToIndex(os.startIndex.successor()).toInt() >= 8){
+            self.manager.requestAlwaysAuthorization()
+        }
+        self.manager.startMonitoringForRegion(self.region)
+    }
+    
+    func locationManager(manager: CLLocationManager!, didStartMonitoringForRegion region: CLRegion!) {
+        println("Scanning...")
+        manager.startRangingBeaconsInRegion(region as CLBeaconRegion)
+    }
+    
+    func locationManager(manager: CLLocationManager!, monitoringDidFailForRegion region: CLRegion!, withError error: NSError!) {
+        println(error)
+    }
+    
+    func locationManager(manager: CLLocationManager!, didEnterRegion region: CLRegion!) {
+        manager.startRangingBeaconsInRegion(region as CLBeaconRegion)
+        println("Possible Match")
+        status.text = "Possible Match"
+    }
+    
+    func locationManager(manager: CLLocationManager!, didExitRegion region: CLRegion!) {
+        self.appDelegate.comm.leaveShop(self.appDelegate.comm.inside.major, minor: self.appDelegate.comm.inside.minor)
+        status.text = "Left the Shop"
+        manager.stopRangingBeaconsInRegion(region as CLBeaconRegion)
+    }
+    
+    func locationManager(manager: CLLocationManager!, didRangeBeacons beacons: NSArray!, inRegion region: CLBeaconRegion!) {
+        if(beacons.count == 0) { return }
+        
+        for beaconIndex in 0...beacons.count-1 {
+            var beacon = beacons[beaconIndex] as CLBeacon
+            
+            if (beacon.proximity == CLProximity.Unknown) {
+                println("Unknown Proximity")
+                status.text = "Unknown Proximity"
+                appDelegate.comm.leaveShop(beacon.major, minor: beacon.minor)
+            } else if (beacon.proximity == CLProximity.Immediate) {
+                println("Immediate")
+                status.text = "Immediate"
+                appDelegate.comm.enterShop(beacon.major, minor: beacon.minor)
+            } else if (beacon.proximity == CLProximity.Near) {
+                println("Near")
+                status.text = "Near"
+                appDelegate.comm.leaveShop(beacon.major, minor: beacon.minor)
+            } else if (beacon.proximity == CLProximity.Far) {
+                println("Far")
+                status.text = "Far"
+                appDelegate.comm.leaveShop(beacon.major, minor: beacon.minor)
+            }
+        }
+    }
+}
+```
+
+##Implement PubNub DataSync and DataStream
+Now that we have the iBeacon triggering our enterShop and leaveShop functions, we can use those functions to give or take our information from the storefront app. Recall that our storefront app is syncing with the DataSync object and PNChannel containing its iBeacon's major and minor identification numbers. Thus, when we are in rage of an iBeacon, we can use those numbers to decide where to publish data.
 
 [1]: http://www.github.com/ertheis/PubNubBeaconGreeter
 [2]: https://github.com/ertheis/Smart-iBeacon/blob/master/README.md
