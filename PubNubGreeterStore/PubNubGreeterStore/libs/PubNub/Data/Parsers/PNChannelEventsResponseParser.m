@@ -178,7 +178,7 @@ static NSUInteger const kPNResponseSynchronizationChannelsListElementIndex = 3;
                     }
                     else if ([PNObjectSynchronizationEvent isSynchronizationEvent:event] ) {
 
-                        if (![PNSynchronizationChannel isObjectSynchronizationChannel:channel.name]) {
+                        if (![channel isObjectSynchronizationChannel]) {
 
                             NSArray *components = [channel.name componentsSeparatedByString:@"."];
                             if ([components count] > 1) {
@@ -191,7 +191,7 @@ static NSUInteger const kPNResponseSynchronizationChannelsListElementIndex = 3;
                                                 dataPath:([components count] > 0 ? changeLocation : nil)];
                             }
                         }
-                        if ([PNSynchronizationChannel isObjectSynchronizationChannel:channel.name]) {
+                        if ([channel isObjectSynchronizationChannel]) {
 
                             eventObject = [PNObjectSynchronizationEvent synchronizationEventForObject:((PNSynchronizationChannel *)channel).objectIdentifier
                                            atPath:((PNSynchronizationChannel *)channel).partialObjectDataPath

@@ -10,10 +10,11 @@ import Foundation
 
 class CustomerComm: NSObject, PNDelegate {
 
-    var pubKey = "pub-c-bf446f9e-dd7f-43fe-8736-d6e5dce3fe67"
-    var subKey = "sub-c-d1c2cc5a-1102-11e4-8880-02ee2ddab7fe"
+    let pubKey = "pub-c-bf446f9e-dd7f-43fe-8736-d6e5dce3fe67"
+    let subKey = "sub-c-d1c2cc5a-1102-11e4-8880-02ee2ddab7fe"
     var authKey = ""
-    var sync_db = "CoffeeShop"
+    let sync_db = "CoffeeShop"
+    let sync_channel = "GreeterChannel"
     
     var name = "Default Name"
     var favorite = "Default Drink"
@@ -21,7 +22,6 @@ class CustomerComm: NSObject, PNDelegate {
     var capturedPicData = NSData()
     
     var inShop = false
-    var syncing = false
     
     var inside: BeaconNumbers
     var uuid: String = ""
@@ -36,35 +36,21 @@ class CustomerComm: NSObject, PNDelegate {
         uuid = PubNub.clientIdentifier()
     }
     
+    func notifyChange(major: Int, minor: Int) {
+        PubNub.sendMessage(PubNub.clientIdentifier(), toChannel: PNChannel.channelWithName("\(self.sync_channel)\(major)\(minor)") as PNChannel)
+    }
+    
+    func sendData(major: Int, minor: Int) {
+        self.pic = self.capturedPicData.base64EncodedStringWithOptions(nil)
+        PubNub.updateObject("\(self.sync_db)\(major)\(minor)", withData: [self.uuid:["textLabel":"Name: \(self.name)", "detailTextLabel":"Favorite Drink: \(self.favorite)", "imgPath":self.pic]])
+    }
+    
     func enterShop(major: Int, minor: Int) {
         if !inShop {
-            PubNub.subscribeOnChannel(PNChannel.channelWithName("GreeterChannel96") as PNChannel) { (state: PNSubscriptionProcessState!, channels: [AnyObject]!, error: PNError!) in
-                if !error {
-                    PubNub.sendMessage(PubNub.clientIdentifier(), toChannel: PNChannel.channelWithName("GreeterChannel96") as PNChannel) { (state: PNMessageState!, data: AnyObject!) in
-                        PubNub.unsubscribeFromChannel(PNChannel.channelWithName("GreeterChannel96") as PNChannel)
-                    }
-                } else {
-                    println("BLOCK: \(error.code)")
-                    println("BLOCK: \(error.description)")
-                }
-            }
-            
-            self.pic = self.capturedPicData.base64EncodedStringWithOptions(nil)
-            if !syncing {
-                PubNub.startObjectSynchronization("\(self.sync_db)\(major)\(minor)") { (syncObject: PNObject!, error: PNError!) in
-                    if !error {
-                        PubNub.updateObject("\(self.sync_db)\(major)\(minor)", withData: [self.uuid:["textLabel":"Name: \(self.name)", "detailTextLabel":"Favorite Drink: \(self.favorite)", "imgPath":self.pic]])
-                        self.syncing = true
-                    } else {
-                        println("BLOCK: \(error.code)")
-                        println("BLOCK: \(error.description)")
-                    }
-                }
-            } else {
-                PubNub.updateObject("\(self.sync_db)\(major)\(minor)", withData: [self.uuid:["textLabel":"Name: \(self.name)", "detailTextLabel":"Favorite Drink: \(self.favorite)", "imgPath":self.pic]])
-            }
-            inside = BeaconNumbers(major: major, minor: minor)
             inShop = true
+            inside = BeaconNumbers(major: major, minor: minor)
+            notifyChange(major, minor: minor)
+            sendData(major, minor: minor)
         }
     }
     

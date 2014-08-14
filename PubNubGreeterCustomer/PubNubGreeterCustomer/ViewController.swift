@@ -42,6 +42,7 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
     
     func locationManager(manager: CLLocationManager!, didStartMonitoringForRegion region: CLRegion!) {
         println("Scanning...")
+        status.text = "Scanning..."
         manager.startRangingBeaconsInRegion(region as CLBeaconRegion)
     }
     
@@ -85,9 +86,5 @@ class ViewController: UIViewController, CLLocationManagerDelegate {
                 appDelegate.comm.leaveShop(beacon.major, minor: beacon.minor)
             }
         }
-    }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
 }

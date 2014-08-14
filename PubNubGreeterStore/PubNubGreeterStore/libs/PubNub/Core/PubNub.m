@@ -12,7 +12,6 @@
 #if __IPHONE_OS_VERSION_MIN_REQUIRED
 #import "UIApplication+PNAdditions.h"
 #endif
-#import "PNObjectAccessRightsCollection+Protected.h"
 #import "PNObjectAccessRightOptions+Protected.h"
 #import "PNSynchronizationChannel+Protected.h"
 #import "PNAccessRightOptions+Protected.h"
@@ -45,7 +44,7 @@
 #pragma mark Static
 
 static NSString * const kPNCodebaseBranch = @"feature-pt74838232";
-static NSString * const kPNCodeCommitIdentifier = @"c4f7f4a8ba8b7411177b98041f166b7152c7d070";
+static NSString * const kPNCodeCommitIdentifier = @"70ec7b8354899884514c367b0a4cd04f70655691";
 
 // Stores reference on singleton PubNub instance
 static PubNub *_sharedInstance = nil;
@@ -156,16 +155,16 @@ static NSMutableArray *pendingInvocations = nil;
 
 + (void)fetchObject:(NSString *)objectIdentifier dataPath:(NSString *)partialObjectDataPath snapshotDate:(NSString *)snapshotDate
       nextPageToken:(NSString *)objectDataNextPageToken byUserRequest:(BOOL)byUserRequest
-withCompletionHandlingBlock:(id)handlerBlock;
+withCompletionHandlingBlock:(PNClientObjectRetrieveHandlerBlock)handlerBlock;
 
 + (void)postponeFetchObject:(NSString *)objectIdentifier dataPath:(NSString *)partialObjectDataPath snapshotDate:(NSString *)snapshotDate
               nextPageToken:(NSString *)objectDataNextPageToken byUserRequest:(BOOL)byUserRequest
-withCompletionHandlingBlock:(id)handlerBlock;
+withCompletionHandlingBlock:(PNClientObjectRetrieveHandlerBlock)handlerBlock;
 
 + (void)modifyObject:(PNObjectModificationInformation *)objectInformation
-        withCompletionHandlingBlock:(id)handlerBlock;
+        withCompletionHandlingBlock:(PNClientObjectModificationHandlerBlock)handlerBlock;
 + (void)postponeModifyObject:(PNObjectModificationInformation *)objectInformation
- withCompletionHandlingBlock:(id)handlerBlock;
+ withCompletionHandlingBlock:(PNClientObjectModificationHandlerBlock)handlerBlock;
 
 
 #pragma mark - Channels subscription management
@@ -1800,7 +1799,7 @@ withCompletionHandlingBlock:nil];
                                   forObject:self
                              withParameters:@[[PNHelper nilifyIfNotSet:objectIdentifier], [PNHelper nilifyIfNotSet:partialObjectDataPath],
                                               [PNHelper nilifyIfNotSet:handlerBlock]]
-                                 outOfOrder:[handlerBlock isKindOfClass:[NSString class]]];
+                                 outOfOrder:NO];
 }
 
 + (void)stopObjectSynchronization:(NSString *)objectIdentifier {
@@ -1930,7 +1929,7 @@ withCompletionHandlingBlock:handlerBlock];
 
 + (void)fetchObject:(NSString *)objectIdentifier dataPath:(NSString *)partialObjectDataPath snapshotDate:(NSString *)snapshotDate
               nextPageToken:(NSString *)objectDataNextPageToken byUserRequest:(BOOL)byUserRequest
-withCompletionHandlingBlock:(id)handlerBlock {
+withCompletionHandlingBlock:(PNClientObjectRetrieveHandlerBlock)handlerBlock {
 
     [PNLogger logGeneralMessageFrom:[self sharedInstance] message:^NSString * {
 
@@ -2014,7 +2013,7 @@ withCompletionHandlingBlock:(id)handlerBlock {
 
             if (handlerBlock && ![handlerBlock isKindOfClass:[NSString class]]) {
 
-                ((PNClientObjectRetrieveHandlerBlock)handlerBlock)(nil, requestError);
+                handlerBlock(nil, requestError);
             }
         }
     }
@@ -2041,14 +2040,14 @@ withCompletionHandlingBlock:(id)handlerBlock {
 
 + (void)postponeFetchObject:(NSString *)objectIdentifier dataPath:(NSString *)partialObjectDataPath snapshotDate:(NSString *)snapshotDate
               nextPageToken:(NSString *)objectDataNextPageToken byUserRequest:(BOOL)byUserRequest
-withCompletionHandlingBlock:(id)handlerBlock {
+withCompletionHandlingBlock:(PNClientObjectRetrieveHandlerBlock)handlerBlock {
 
     [[self sharedInstance] postponeSelector:@selector(fetchObject:dataPath:snapshotDate:nextPageToken:byUserRequest:withCompletionHandlingBlock:)
                                   forObject:self
                              withParameters:@[[PNHelper nilifyIfNotSet:objectIdentifier], [PNHelper nilifyIfNotSet:partialObjectDataPath],
                                               [PNHelper nilifyIfNotSet:snapshotDate], [PNHelper nilifyIfNotSet:objectDataNextPageToken],
                                               @(byUserRequest), [PNHelper nilifyIfNotSet:handlerBlock]]
-                                 outOfOrder:((objectDataNextPageToken != nil) || [handlerBlock isKindOfClass:[NSString class]])];
+                                 outOfOrder:(objectDataNextPageToken != nil)];
 }
 
 
@@ -2126,7 +2125,7 @@ withCompletionHandlingBlock:(PNClientObjectModificationHandlerBlock)handlerBlock
 }
 
 + (void)modifyObject:(PNObjectModificationInformation *)objectInformation
-        withCompletionHandlingBlock:(id)handlerBlock {
+        withCompletionHandlingBlock:(PNClientObjectModificationHandlerBlock)handlerBlock {
 
     [PNLogger logGeneralMessageFrom:[self sharedInstance] message:^NSString * {
 
@@ -2182,7 +2181,7 @@ withCompletionHandlingBlock:(PNClientObjectModificationHandlerBlock)handlerBlock
 
             if (handlerBlock && ![handlerBlock isKindOfClass:[NSString class]]) {
 
-                ((PNClientObjectModificationHandlerBlock)handlerBlock)(nil, error);
+                handlerBlock(nil, error);
             }
 
         };
@@ -2282,11 +2281,11 @@ withCompletionHandlingBlock:(PNClientObjectModificationHandlerBlock)handlerBlock
 }
 
 + (void)postponeModifyObject:(PNObjectModificationInformation *)objectInformation
- withCompletionHandlingBlock:(id)handlerBlock {
+ withCompletionHandlingBlock:(PNClientObjectModificationHandlerBlock)handlerBlock {
 
     [[self sharedInstance] postponeSelector:@selector(modifyObject:withCompletionHandlingBlock:) forObject:self
                              withParameters:@[[PNHelper nilifyIfNotSet:objectInformation], [PNHelper nilifyIfNotSet:handlerBlock]]
-                                 outOfOrder:[handlerBlock isKindOfClass:[NSString class]]];
+                                 outOfOrder:NO];
 }
 
 
@@ -3467,7 +3466,7 @@ withCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBloc
                         [self humanReadableStateFrom:[self sharedInstance].state]];
             }];
             
-            BOOL isObjectAccessRightsChangeRequest = [PNSynchronizationChannel isObjectSynchronizationChannel:((PNChannel *)[channels lastObject]).name];
+            BOOL isObjectAccessRightsChangeRequest = [(PNChannel *)[channels lastObject] isObjectSynchronizationChannel];
             id options = [PNAccessRightOptions accessRightOptionsForApplication:[self sharedInstance].configuration.subscriptionKey
                                                                      withRights:accessRights channels:channels
                                                                         clients:clientsAuthorizationKeys
@@ -3488,7 +3487,7 @@ withCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBloc
             
             if (handlerBlock && ![handlerBlock isKindOfClass:[NSString class]]) {
                 
-                if (![PNSynchronizationChannel isObjectSynchronizationChannel:((PNChannel *)[channels lastObject]).name]) {
+                if ([(PNChannel *)[channels lastObject] isObjectSynchronizationChannel]) {
                 
                     ((PNClientChannelAccessRightsChangeBlock)handlerBlock)(nil, accessRightChangeError);
                 }
@@ -3697,14 +3696,13 @@ withCompletionHandlingBlock:(PNClientChannelSubscriptionHandlerBlock)handlerBloc
 
 
             if (handlerBlock && ![handlerBlock isKindOfClass:[NSString class]]) {
-                
-                if (![PNSynchronizationChannel isObjectSynchronizationChannel:((PNChannel *)[channels lastObject]).name]) {
+
+                if ([(PNChannel *)[channels lastObject] isObjectSynchronizationChannel]) {
                     
                     ((PNClientChannelAccessRightsAuditBlock)handlerBlock)(nil, accessRightAuditError);
                 }
                 else {
                     
-                    ((PNClientObjectAccessRightsAuditBlock)handlerBlock)(nil, accessRightAuditError);
                 }
             }
 
