@@ -40,7 +40,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         PubNub.subscribeOnChannel(PNChannel.channelWithName("GreeterChannel96") as PNChannel)
         
         PNObservationCenter.defaultCenter().addObjectSynchronizationStartObserver(self) { (syncObject: PNObject!, error: PNError!) in
-            if !error {
+            if error == nil {
                 self.tableData = syncObject
                 self.tableView.reloadData()
             } else {
@@ -63,7 +63,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
-    func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager!) {
+    func peripheralManagerDidUpdateState(peripheral: CBPeripheralManager) {
         if(peripheral.state == CBPeripheralManagerState.PoweredOn) {
             println("powered on")
             self.beaconText = "Beacon Advertising"
@@ -77,32 +77,32 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
-    func tableView(tableView: UITableView!, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if tableData.count > 0 {
             return tableData.count
         }
         return 1
     }
     
-    func tableView(tableView: UITableView!, heightForRowAtIndexPath indexPath: NSIndexPath!) -> CGFloat {
+    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return 80
     }
     
     func cellFormater(cell: UITableViewCell, highlighted: Bool) {
         if highlighted {
             cell.backgroundColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1)
-            cell.textLabel.textColor = UIColor.whiteColor()
-            cell.detailTextLabel.textColor = UIColor.whiteColor()
-            cell.imageView.layer.borderColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1).CGColor
+            cell.textLabel?.textColor = UIColor.whiteColor()
+            cell.detailTextLabel?.textColor = UIColor.whiteColor()
+            cell.imageView?.layer.borderColor = UIColor(red: 206.0/255.0, green: 17/255.0, blue: 38/255.0, alpha: 1).CGColor
         } else {
             cell.backgroundColor = UIColor.whiteColor()
-            cell.textLabel.textColor = UIColor.blackColor()
-            cell.detailTextLabel.textColor = UIColor.blackColor()
-            cell.imageView.layer.borderColor = UIColor.whiteColor().CGColor
+            cell.textLabel?.textColor = UIColor.blackColor()
+            cell.detailTextLabel?.textColor = UIColor.blackColor()
+            cell.imageView?.layer.borderColor = UIColor.whiteColor().CGColor
         }
     }
     
-    func tableView(tableView: UITableView!, cellForRowAtIndexPath indexPath: NSIndexPath!) -> UITableViewCell! {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         var potentialCell = tableView.dequeueReusableCellWithIdentifier("cell") as? UITableViewCell
         var cell: UITableViewCell
         if potentialCell != nil {
@@ -132,20 +132,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             }
         }
         
-        cell.textLabel.text = cellData["textLabel"]
-        cell.detailTextLabel.text = cellData["detailTextLabel"]
+        cell.textLabel?.text = cellData["textLabel"]
+        cell.detailTextLabel?.text = cellData["detailTextLabel"]
         var theImage = UIImage()
         if cellData["imgPath"] == "./DefaultPic" {
             let path = NSBundle.mainBundle().pathForResource(cellData["imgPath"], ofType: "png")
-            theImage = UIImage(contentsOfFile: path)
+            theImage = UIImage(contentsOfFile: path!)
         } else {
-            var raw = cellData["imgPath"] as String?
-            theImage = UIImage(data: NSData(base64EncodedString: raw!, options: NSDataBase64DecodingOptions.fromRaw(0)!))
+            var raw = cellData["imgPath"] as String!
+            theImage = UIImage(data: NSData(base64EncodedString: raw, options: NSDataBase64DecodingOptions.fromRaw(0)!))
         }
-        cell.imageView.image = theImage
-        cell.imageView.layer.cornerRadius = 40
-        cell.imageView.layer.borderWidth = 2
-        cell.imageView.layer.masksToBounds = true
+        cell.imageView?.image = theImage
+        cell.imageView?.layer.cornerRadius = 40
+        cell.imageView?.layer.borderWidth = 2
+        cell.imageView?.layer.masksToBounds = true
         return cell
     }
     
